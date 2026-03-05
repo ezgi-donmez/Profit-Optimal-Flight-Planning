@@ -1,19 +1,53 @@
 # Profit-Optimal Flight Planning (DS502 - Path B)
 
-## Problem
-Determine the number of flights per route, planning period, and aircraft type to maximize expected profit,
-subject to fleet-hour capacity and minimum service constraints.
+## Problem Description
+We aim to determine the number of flights to operate for each **route (r)**, **planning period (t)**, and **aircraft type (a)** to **maximize expected profit**, subject to:
+- limited fleet operating capacity (modeled via aircraft-hours),
+- minimum service / coverage requirements (to avoid dropping important routes).
+
+**Decision outputs**
+- flight plan: `x[r,t,a]` = number of flights scheduled
+- served indicator: `y[r,t]` = whether route r is served in period t (optional)
+
+## Scope 
+- Network: single origin hub (DXB) to multiple destinations
+- Planning period: **monthly** (can be changed to Season if needed for faster experiments)
+- Level of detail: route frequency planning 
 
 ## Dataset
 Airline Route Profitability and Cost Analysis (Kaggle):
 https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis/data
 
-## Expected Method
-Mixed-Integer Linear Programming (MILP) solved with Gurobi.
+## Modeling Plan (MILP)
+### Sets / indices
+- r ∈ R: routes (origin–destination)
+- t ∈ T: planning periods (Month)
+- a ∈ A: aircraft types
+
+### Parameters 
+- π[r,t,a]: expected profit per flight
+- h[r,t,a]: expected aircraft-hours per flight
+
+### Decision variables
+- x[r,t,a] ∈ Z₊ : number of flights
+- y[r,t] ∈ {0,1} : served/not served 
+
+### Objective
+Maximize total expected profit:
+- max  Σ_{r,t,a}  π[r,t,a] · x[r,t,a]
+
+### Core constraints
+- Fleet-hour capacity
+- Service/coverage linking
+- Minimum service (if enabled)
+- Bounds
+
+## Method
+Mixed-Integer Linear Programming (MILP) solved with Gurobi/OR-Tools.
 
 ## Repo Structure
 - data/raw: raw dataset 
-- data/processed: aggregated parameters for optimization
+- data/processed: cleaned/aggregated parameters for optimization
 - src: python scripts (cleaning, model, experiments)
 - outputs: solutions and experiment results
 
