@@ -55,7 +55,18 @@ print(missing_tbl)
 dup_all = df.duplicated().sum()
 key_cols = ["Flight_Number", "Flight_Date", "Origin", "Destination", "Aircraft_Type"]
 dup_key = df.duplicated(subset=key_cols).sum()
-
 print("Duplicates (all columns):", dup_all)
 print("Duplicates (key cols):", dup_key)
+
+# Check if the dataset is internally consistent
+profit_err = (df["Profit"] - (df["Total_Revenue"] - df["Total_Cost"])).abs() # Profit should equal Total_Revenue - Total_Cost
+print("Profit identity max abs error:", profit_err.max())
+print("Profit identity mean abs error:", profit_err.mean())
+
+# Total_Revenue should equal Ticket_Revenue + Ancillary_Revenue when ancillary exists
+mask = df["Ancillary_Revenue"].notna()
+rev_err = (df.loc[mask, "Total_Revenue"] - (df.loc[mask, "Ticket_Revenue"] + df.loc[mask, "Ancillary_Revenue"])).abs()
+print("Revenue identity max abs error (where ancillary present):", rev_err.max())
+print("Revenue identity mean abs error (where ancillary present):", rev_err.mean())
+
 
