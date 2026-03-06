@@ -1,4 +1,4 @@
-# Profit-Optimal Flight Planning (DS502 - Path B)
+# Profit-Optimal Flight Planning (DS502 - Path B - Ezgi D. S024981)
 
 ## Problem Description
 We aim to determine the number of flights to operate for each **route (r)**, **planning period (t)**, and **aircraft type (a)** to **maximize expected profit**, subject to:
