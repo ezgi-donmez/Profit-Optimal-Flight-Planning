@@ -19,8 +19,7 @@ Airline Route Profitability and Cost Analysis (Kaggle):
 https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis/data
 I downloaded the dataset, and using it through the file path.
 
-## Modeling Plan (MILP)
-This project is naturally formulated as a Mixed-Integer Linear Program (MILP) because the key decisions include both discrete and logical choices. The number of flights assigned to each route–period–aircraft combination must be an integer because operating 3.7 flights is not meaningful, and minimum-service/coverage requirements introduce binary “served/not served” decisions for routes. These logical constraints are expressed through standard linking formulations and, while fleet-hour capacity constraints remain linear. Therefore, MILP provides the correct modeling class-capturing integrality and service logic-while allowing efficient solution with solvers such as Gurobi under the project’s scope and timeline.
+## Modeling Plan
 
 ### Sets / indices
 - r ∈ R: routes (origin–destination)
@@ -46,7 +45,8 @@ Maximize total expected profit:
 - Bounds
 
 ## Method
-Mixed-Integer Linear Programming (MILP) solved with Gurobi/OR-Tools.
+Mixed-Integer Linear Programming (MILP) solved with Gurobi/OR-Tools. 
+This project is naturally formulated as a Mixed-Integer Linear Program (MILP) because the key decisions include both discrete and logical choices. The number of flights assigned to each route–period–aircraft combination must be an integer because operating 3.7 flights is not meaningful, and minimum-service/coverage requirements introduce binary “served/not served” decisions for routes. These logical constraints are expressed through standard linking formulations and, while fleet-hour capacity constraints remain linear. Therefore, MILP provides the correct modeling class-capturing integrality and service logic-while allowing efficient solution with solvers such as Gurobi under the project’s scope and timeline.
 
 ## Repo Structure
 - data/raw: raw dataset 
