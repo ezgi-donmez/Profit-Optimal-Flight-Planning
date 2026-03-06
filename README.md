@@ -17,6 +17,7 @@ We aim to determine the number of flights to operate for each **route (r)**, **p
 ## Dataset
 Airline Route Profitability and Cost Analysis (Kaggle):
 https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis/data
+I downloaded the dataset, and using it through the file path.
 
 ## Modeling Plan (MILP)
 ### Sets / indices
