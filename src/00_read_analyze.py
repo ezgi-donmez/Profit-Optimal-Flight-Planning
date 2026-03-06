@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 
 # file path 
 DATA_PATH = Path(r"C:\Users\ed024981\Desktop\DS502project\airline_route_profitability.xlsx")
-# Output folder 
-OUT_DIR = Path(r"C:\Users\ed024981\Desktop\DS502project\outputs\eda")
-OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Read Excel
 df = pd.read_excel(DATA_PATH, engine="openpyxl")
