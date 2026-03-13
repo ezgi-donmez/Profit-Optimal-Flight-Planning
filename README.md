@@ -80,8 +80,37 @@ max  Σ_{r,t,a}  π_rta^(δ) · x_rta
 | (8) | y_rt ∈ {0, 1} |  | Binary service indicators |
 
 ---
+## Solver
 
+**Primary:** [Gurobi](https://www.gurobi.com/) (via `gurobipy`)  
+**Fallback:** [OR-Tools CP-SAT](https://developers.google.com/optimization) (open-source, no license required)
 
+Both solvers accept the same MILP formulation. Gurobi is preferred for speed on larger instances; OR-Tools is used for reproducibility without a license.
+
+---
+
+## Planned Experiments (≥ 10 scenarios)
+
+All experiments vary one or more parameters relative to the baseline (α = 1.0, δ = 0).
+
+| # | Scenario | Parameter Change |
+|---|----------|-----------------|
+| 1 | Baseline | α = 1.0, δ = 0, no min-service |
+| 2 | Capacity –20% | α = 0.80 |
+| 3 | Capacity –40% | α = 0.60 |
+| 4 | Capacity +20% | α = 1.20 |
+| 5 | Fuel shock +10% | δ = 0.10 |
+| 6 | Fuel shock +25% | δ = 0.25 |
+| 7 | Min service ON (loose) | L_rt = 1 per served route |
+| 8 | Min service ON (tight) | L_rt = 3 per served route |
+| 9 | Category coverage ON | K_ct = 2 per category |
+| 10 | Capacity –20% + Fuel shock +10% | α = 0.80, δ = 0.10 |
+| 11 | Capacity –40% + Fuel shock +25% | α = 0.60, δ = 0.25 |
+| 12 | Seasonal aggregation | Periods = seasons instead of months |
+
+Key output metrics tracked across scenarios: total expected profit, number of routes served, fleet utilization rate, routes dropped per category.
+
+---
 
 ## Method
 Mixed-Integer Linear Programming (MILP) solved with Gurobi/OR-Tools. 
