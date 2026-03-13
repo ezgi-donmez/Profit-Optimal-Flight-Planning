@@ -16,6 +16,7 @@ An airline operating out of a single hub (DXB) must allocate limited fleet capac
 │   ├── raw/              # Original Kaggle dataset
 │   └── processed/        # Cleaned & aggregated parameters (params_rta.csv)
 ├── src/
+│   ├── 00_read_analyze.py 
 │   ├── 01_clean_aggregate.py   # Data prep → data/processed/
 │   ├── 02_build_model.py       # MILP formulation & baseline solve
 │   └── 03_experiments.py       # Scenario runs & result export
