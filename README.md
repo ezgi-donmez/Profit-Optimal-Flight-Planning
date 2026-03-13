@@ -68,15 +68,15 @@ max  Σ_{r,t,a}  π_rta^(δ) · x_rta
 ```
 ### Constraints
 
-| # | Constraint | Description |
-|---|-----------|-------------|
-| (2) | Σ_r h_rta · x_rta ≤ H_at        ∀a, t | Fleet-hour capacity per aircraft type and period |
-| (3) | x_rta ≤ M_rta · y_rt            ∀r, t, a | Link flights to route activation; no flights if route not served |
-| (4) | Σ_a x_rta ≥ L_rt · y_rt         ∀r, t | Minimum flights when a route is served |
-| (5) | 0 ≤ x_rta ≤ M_rta               ∀r, t, a | Non-negativity and data-driven upper bounds |
-| (6) | Σ_{r∈R_c} y_rt ≥ K_ct           ∀c, t | Category coverage: at least K_ct routes served per category |
-| (7) | x_rta ∈ ℤ₊ |  Integer flight counts |
-| (8) | y_rt ∈ {0, 1} | Binary service indicators |
+| # | Constraint | Quantifier | Description |
+|---|-----------|------------|-------------|
+| (2) | Σ_r h_rta · x_rta ≤ H_at | ∀a, t | Fleet-hour capacity per aircraft type and period |
+| (3) | x_rta ≤ M_rta · y_rt | ∀r, t, a | Link flights to route activation; no flights if route not served |
+| (4) | Σ_a x_rta ≥ L_rt · y_rt | ∀r, t | Minimum flights when a route is served |
+| (5) | 0 ≤ x_rta ≤ M_rta | ∀r, t, a | Non-negativity and data-driven upper bounds |
+| (6) | Σ_{r∈R_c} y_rt ≥ K_ct | ∀c, t | Category coverage: at least K_ct routes served per category |
+| (7) | x_rta ∈ ℤ₊ | — | Integer flight counts |
+| (8) | y_rt ∈ {0, 1} | — | Binary service indicators |
 
 ---
 
