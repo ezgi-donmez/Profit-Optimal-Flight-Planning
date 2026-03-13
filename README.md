@@ -1,4 +1,5 @@
-# Profit-Optimal Flight Planning (DS502 - Path B - Ezgi D. S024981)
+# Profit-Optimal Flight Planning 
+###(DS502 - Path B - Ezgi D. S024981)
 
 A Mixed-Integer Linear Programming (MILP) model that determines optimal flight frequencies across routes, planning periods, and aircraft types to maximize expected profit, subject to fleet-hour capacity and minimum service requirements.
 
