@@ -9,6 +9,33 @@ A Mixed-Integer Linear Programming (MILP) model that determines optimal flight f
 
 An airline operating out of a single hub (DXB) must allocate limited fleet capacity across a set of routes and monthly planning periods. Using historical profitability and cost records, the model selects flight frequencies per route–period–aircraft combination to maximize total expected profit while respecting aircraft-hour limits and optional minimum service levels across route categories (short-, medium-, and long-haul).
 
+## Repository Structure
+
+```
+├── data/
+│   ├── raw/              # Original Kaggle dataset
+│   └── processed/        # Cleaned & aggregated parameters (params_rta.csv)
+├── src/
+│   ├── 01_clean_aggregate.py   # Data prep → data/processed/
+│   ├── 02_build_model.py       # MILP formulation & baseline solve
+│   └── 03_experiments.py       # Scenario runs & result export
+├── outputs/              # Solver results, experiment summaries, plots
+└── README.md
+```
+
+---
+
+## Mathematical Model (MILP)
+
+### Sets & Indices
+
+| Symbol | Description |
+|--------|-------------|
+| r ∈ R | Routes (Origin–Destination pairs) |
+| t ∈ T | Planning periods (months) |
+| a ∈ A | Aircraft types |
+| c ∈ C | Route categories (Short / Medium / Long Haul) |
+| R_c ⊆ R | Subset of routes belonging to category c |
 
 
 
