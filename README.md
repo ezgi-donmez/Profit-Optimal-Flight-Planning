@@ -37,9 +37,35 @@ An airline operating out of a single hub (DXB) must allocate limited fleet capac
 | c ∈ C | Route categories (Short / Medium / Long Haul) |
 | R_c ⊆ R | Subset of routes belonging to category c |
 
+### Parameters
 
+| Symbol | Description |
+|--------|-------------|
+| π_rta | Expected profit per flight on route r, period t, aircraft a |
+| h_rta | Expected aircraft-hours per flight for (r, t, a) |
+| H_at | Available aircraft-hours for type a in period t (= α_at · H̄_at) |
+| H̄_at | Historical total aircraft-hours for type a in period t |
+| M_rta | Maximum allowed flights for (r, t, a) — data-driven upper bound |
+| L_rt | Minimum flights required on route r in period t if served |
+| K_ct | Minimum number of routes to serve in category c during period t |
+| α_at | Capacity multiplier (experiment parameter; baseline = 1.0) |
+| f_rta | Average fuel cost per flight for (r, t, a) |
+| δ | Fuel price shock factor; adjusted profit: π_rta^(δ) = π_rta − δ · f_rta |
 
+### Decision Variables
 
+| Symbol | Domain | Description |
+|--------|--------|-------------|
+| x_rta | ℤ₊ | Number of flights on route r, period t, aircraft type a |
+| y_rt | {0, 1} | 1 if route r is served in period t, else 0 |
+
+### Objective
+
+Maximize total expected profit:
+
+```
+max  Σ_{r,t,a}  π_rta^(δ) · x_rta
+```
 
 
 
