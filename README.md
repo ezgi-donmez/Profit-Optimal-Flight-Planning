@@ -116,12 +116,21 @@ Key output metrics tracked across scenarios: total expected profit, number of ro
 Mixed-Integer Linear Programming (MILP) solved with Gurobi/OR-Tools. 
 This project is naturally formulated as a Mixed-Integer Linear Program (MILP) because the key decisions include both discrete and logical choices. The number of flights assigned to each route–period–aircraft combination must be an integer because operating 3.7 flights is not meaningful, and minimum-service/coverage requirements introduce binary “served/not served” decisions for routes. These logical constraints are expressed through standard linking formulations and, while fleet-hour capacity constraints remain linear. Therefore, MILP provides the correct modeling class-capturing integrality and service logic-while allowing efficient solution with solvers such as Gurobi under the project’s scope and timeline.
 
-## Repo Structure
-- data/raw: raw dataset 
-- data/processed: cleaned/aggregated sets/parameters for optimization
-- src: python scripts (read/analyze, clean/aggregate, model, experiments)
-- outputs: solutions and experiment results
+**Assumptions**
+- Profit per flight and flight-hours are estimated from historical data and treated as deterministic.
+- Aircraft availability is captured through aggregate fleet-hours per type and period; tail-level rotations are not modeled.
+- Routes are independent except for shared fleet-hour capacity (no spill/recapture or competition effects).
+- Uncertainty is handled via scenario parameters rather than stochastic optimization.
 
+**Simplifications**
+- No crew pairing, maintenance routing, airport slot constraints, or aircraft rotation feasibility.
+- Planning is at the route-frequency level (how many flights), not a full timetable.
+
+**Limitations**
+- Public dataset only — internal airline constraints (maintenance calendars, slot portfolios) are excluded.
+- Results are decision-support recommendations; operational feasibility should be verified separately.
+
+---
 ## DS502 Roadmap 
 
 ### D1 — Topic & Repo Setup (Week 3)
