@@ -10,12 +10,13 @@ A Mixed-Integer Linear Programming (MILP) model that determines optimal flight f
 ```
 ├── data/
 │   ├── raw/              # Original Kaggle dataset
-│   └── processed/        # Cleaned & aggregated parameters (params_rta.csv)
+│   └── processed/        # Cleaned & aggregated parameters 
 ├── src/
 │   ├── 00_read_analyze.py 
 │   ├── 01_clean_aggregate.py   # Data prep → data/processed/
-│   ├── 02_build_model.py       # MILP formulation & baseline solve
-│   └── 03_experiments.py       # Scenario runs & result export
+│   ├── 02_data_loader.py       # Load the data
+│   └── 03_model.py             # MILP formulation implemented in gurobi
+│   └── 04_main.py              # to run the model
 ├── outputs/              # Solver results, experiment summaries, plots
 └── README.md
 ```
@@ -79,9 +80,7 @@ max  Σ_{r,t,a}  π_rta^(δ) · x_rta
 ## Solver
 
 **Primary:** [Gurobi](https://www.gurobi.com/) (via `gurobipy`)  
-**Fallback:** [OR-Tools CP-SAT](https://developers.google.com/optimization) (open-source, no license required)
-
-Both solvers accept the same MILP formulation. Gurobi is preferred for speed on larger instances; OR-Tools is used for reproducibility without a license.
+Gurobi is preferred for speed on larger instances.
 
 ---
 
@@ -145,7 +144,7 @@ This project is naturally formulated as a Mixed-Integer Linear Program (MILP) be
 
 ### D4 — Implementation v1 + Baseline Results (Week 6)
 - `src/01_clean_aggregate.py` → `data/processed/params_rta.csv`
-- `src/02_build_model_gurobi.py` → baseline MILP solution + summary metrics
+- `src/02_data_loader.py` & `src/03_model.py` & `src/04_main.py` → baseline MILP solution + summary metrics
 - Baseline outputs: total profit, utilization, route coverage
 
 ### D5 — Experiment Plan + Other Components (Week 7)
