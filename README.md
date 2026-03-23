@@ -15,11 +15,11 @@ A Mixed-Integer Linear Programming (MILP) model that determines optimal flight f
 │       ├── L_rt.csv
 │       └── route_category.csv
 ├── src/
-│   ├── 00_read_analyze.py 
-│   ├── 01_clean_aggregate.py   # Data prep → data/processed/
-│   ├── 02_data_loader.py       # Load the data
-│   └── 03_model.py             # MILP formulation implemented in gurobi
-│   └── 04_main.py              # to run the model
+│   ├── read_analyze.py 
+│   ├── clean_aggregate.py   # Data prep → data/processed/
+│   ├── data_loader.py       # Load the data
+│   └── model.py             # MILP formulation implemented in gurobi
+│   └── main.py              # to run the model
 ├── outputs/              # Solver results, experiment summaries, plots
 └── README.md
 ```
@@ -136,7 +136,7 @@ Key output metrics tracked across scenarios: total expected profit, number of ro
 ---
 
 ## Method
-Mixed-Integer Linear Programming (MILP) solved with Gurobi/OR-Tools. 
+Mixed-Integer Linear Programming (MILP) solved with Gurobi. 
 This project is naturally formulated as a Mixed-Integer Linear Program (MILP) because the key decisions include both discrete and logical choices. The number of flights assigned to each route–period–aircraft combination must be an integer because operating 3.7 flights is not meaningful, and minimum-service/coverage requirements introduce binary “served/not served” decisions for routes. These logical constraints are expressed through standard linking formulations and, while fleet-hour capacity constraints remain linear. Therefore, MILP provides the correct modeling class-capturing integrality and service logic-while allowing efficient solution with solvers such as Gurobi under the project’s scope and timeline.
 
 **Assumptions**
