@@ -83,9 +83,6 @@ max  Σ_{r,t,a}  π_rta^(δ) · x_rta
 ## Solver
 
 **Primary:** [Gurobi](https://www.gurobi.com/) (via `gurobipy`)  
-Gurobi is preferred for speed on larger instances.
-
----
 
 ## Solver / Library Requirements
 
@@ -111,6 +108,7 @@ pandas gurobipy
 3. Run the main script from the project root directory:
 src/main.py
 
+---
 ## Small Instance Output Explanation
 The small test instance was solved successfully to optimality using a reduced real-data subset with 10 routes, 3 months, and 3 aircraft types, corresponding to 36 feasible (r,t,a) combinations and a balanced category mix of 3 Long Haul, 3 Medium Haul, and 4 Short Haul routes. The resulting MILP contained 66 variables and 84 constraints, and Gurobi found the OPTIMAL solution in 0.001 seconds with an objective value of $25,573,426.66, which represents the maximum expected profit for this reduced instance. The solution activated 30 route-month pairs in total, which is consistent with serving all 10 selected routes across 3 months, and the output also shows the corresponding flight allocations by aircraft type for each active route-month pair.  `small_instance_output.txt` contains the full raw terminal output of this first small-instance run, including the data summary, Gurobi solver log, and detailed route-level solution results.
 
