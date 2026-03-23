@@ -6,10 +6,11 @@ Runs: A SMALL test instance (10 routes, 3 months, 3 aircraft)
 import os
 import sys
 
+# Allow running from any directory
 sys.path.insert(0, os.path.dirname(__file__))
 
 from data_loader import load_data, print_data_summary
-from model import build_and_solve
+from model       import build_and_solve
 
 # print results
 def print_results(results, title=""):
@@ -30,45 +31,44 @@ def print_results(results, title=""):
     print(f"  Objective z*  : ${results['obj_value']:>18,.2f}  (USD)")
     print()
 
-# active route summary  
+    # Active routes summary
     served = sorted(results['y_vals'].keys())
     print(f"  Active routes : {len(served)}")
     for (r, t) in served:
-        flights_this_rt = {
-            (rr, tt, aa): v
-            for (rr, tt, aa), v in results['x_vals'].items()
-            if rr == r and tt == t
-        }
+        flights_this_rt = {(rr, tt, aa): v
+                           for (rr, tt, aa), v in results['x_vals'].items()
+                           if rr == r and tt == t}
         total_flights = sum(flights_this_rt.values())
         detail = "  ".join(f"{aa}:{v}" for (_, _, aa), v in flights_this_rt.items())
         print(f"    {r}  Month {t:>2}  | total={total_flights:>3}  [{detail}]")
 
     print()
 
-# run in small instance
+# MAIN
 if __name__ == "__main__":
+
+    # SMALL INSTANCE 
+    # 10 routes, 3 months, 3 aircraft types
     print("\n" + "#" * 65)
-    print("# SMALL TEST INSTANCE ONLY")
+    print("# STEP 1 – SMALL TEST INSTANCE (D4 requirement)")
     print("#" * 65)
 
     small_data = load_data(
-        n_routes=10,
-        n_months=3,
-        n_aircraft=3,
-        K_ct_value=1,
-        alpha=1.0,
+        n_routes = 10,
+        n_months = 3,
+        n_aircraft = 3,
+        K_ct_value = 1,
+        alpha = 1.0,
     )
-
     print_data_summary(small_data)
 
+    # Baseline (no fuel shock)
     res_small = build_and_solve(
         small_data,
-        delta=0.0,
-        alpha=1.0,
-        time_limit=120,
-        verbose=True,
+        delta = 0.0,
+        alpha = 1.0,
+        time_limit = 120,
+        verbose=True, 
     )
+    print_results(res_small, title="Small Instance - Baseline (delta=0)")
 
-    print_results(res_small, title="Small Instance - Baseline")
-
-    print("\nDone. Small instance completed.")
