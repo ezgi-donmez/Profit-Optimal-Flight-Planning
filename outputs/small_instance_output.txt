@@ -1,5 +1,5 @@
 #################################################################
-# STEP 1 – SMALL TEST INSTANCE
+# STEP 1 – SMALL TEST INSTANCE (D4 requirement)
 #################################################################
 =======================================================
 DATA SUMMARY
@@ -27,7 +27,7 @@ TimeLimit  120
 MIPGap  0.01
 
 Optimize a model with 84 rows, 66 columns and 204 nonzeros (Max)
-Model fingerprint: 0x3756e594
+Model fingerprint: 0x80824f1f
 Model has 36 linear objective coefficients
 Variable types: 0 continuous, 66 integer (30 binary)
 Coefficient statistics:
@@ -51,7 +51,7 @@ Best objective 2.557342666000e+07, best bound 2.560977521000e+07, gap 0.1421%
   delta=0.00  |  alpha=1.00
 =================================================================
   Solver status : OPTIMAL
-  Runtime       : 0.001 s
+  Runtime       : 0.002 s
   Variables     : 66
   Constraints   : 84
   Objective z*  : $     25,573,426.66  (USD)
@@ -60,7 +60,7 @@ Best objective 2.557342666000e+07, best bound 2.560977521000e+07, gap 0.1421%
     DXB-BAH  Month  1  | total= 16  [Airbus A320:16]
     DXB-BAH  Month  2  | total= 19  [Airbus A320:19]
     DXB-BAH  Month  3  | total= 14  [Airbus A320:14]
-    DXB-DEL  Month  1  | total= 25  [Boeing 787-9:8  Airbus A350-900:17]
+    DXB-DEL  Month  1  | total= 25  [Airbus A350-900:17  Boeing 787-9:8]
     DXB-DEL  Month  2  | total= 23  [Boeing 787-9:11  Airbus A350-900:12]
     DXB-DEL  Month  3  | total= 14  [Airbus A350-900:8  Boeing 787-9:6]
     DXB-DOH  Month  1  | total= 12  [Airbus A320:12]
@@ -69,9 +69,9 @@ Best objective 2.557342666000e+07, best bound 2.560977521000e+07, gap 0.1421%
     DXB-HKG  Month  1  | total= 11  [Boeing 787-9:11]
     DXB-HKG  Month  2  | total=  8  [Boeing 787-9:8]
     DXB-HKG  Month  3  | total= 10  [Boeing 787-9:10]
-    DXB-IST  Month  1  | total= 20  [Airbus A350-900:14  Boeing 787-9:6]
-    DXB-IST  Month  2  | total= 20  [Boeing 787-9:10  Airbus A350-900:10]
-    DXB-IST  Month  3  | total= 17  [Airbus A350-900:7  Boeing 787-9:10]
+    DXB-IST  Month  1  | total= 20  [Boeing 787-9:6  Airbus A350-900:14]
+    DXB-IST  Month  2  | total= 20  [Airbus A350-900:10  Boeing 787-9:10]
+    DXB-IST  Month  3  | total= 17  [Boeing 787-9:10  Airbus A350-900:7]
     DXB-JFK  Month  1  | total= 11  [Boeing 787-9:11]
     DXB-JFK  Month  2  | total=  8  [Boeing 787-9:8]
     DXB-JFK  Month  3  | total=  7  [Boeing 787-9:7]
@@ -79,46 +79,6 @@ Best objective 2.557342666000e+07, best bound 2.560977521000e+07, gap 0.1421%
     DXB-KWI  Month  2  | total= 14  [Airbus A320:14]
     DXB-KWI  Month  3  | total= 13  [Airbus A320:13]
     DXB-LHR  Month  1  | total= 12  [Boeing 787-9:12]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-MCT  Month  1  | total= 13  [Airbus A320:13]
-    DXB-MCT  Month  2  | total= 15  [Airbus A320:15]
-    DXB-MCT  Month  3  | total=  9  [Airbus A320:9]
-    DXB-SYD  Month  1  | total=  8  [Boeing 787-9:8]
-    DXB-SYD  Month  2  | total=  5  [Boeing 787-9:5]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-MCT  Month  1  | total= 13  [Airbus A320:13]
-    DXB-MCT  Month  2  | total= 15  [Airbus A320:15]
-    DXB-MCT  Month  3  | total=  9  [Airbus A320:9]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-MCT  Month  1  | total= 13  [Airbus A320:13]
-    DXB-MCT  Month  2  | total= 15  [Airbus A320:15]
-    DXB-MCT  Month  3  | total=  9  [Airbus A320:9]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-MCT  Month  1  | total= 13  [Airbus A320:13]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
-    DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
     DXB-LHR  Month  2  | total=  7  [Boeing 787-9:7]
     DXB-LHR  Month  3  | total=  6  [Boeing 787-9:6]
     DXB-MCT  Month  1  | total= 13  [Airbus A320:13]
