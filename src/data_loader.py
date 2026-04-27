@@ -5,7 +5,7 @@ Loads and structures all parameters needed for the Flight Planning MILP
 from the processed CSV files in data/processed/.
 
 Returns a single `data` dict containing sets and parameters as described
-in the mathematical model (Week 5 Deliverable 3).
+in the mathematical model 
 """
 
 import pandas as pd
