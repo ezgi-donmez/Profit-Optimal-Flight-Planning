@@ -1,0 +1,56 @@
+================================================================================
+MDP ENUMERATION SUMMARY
+================================================================================
+States at time 0: 1
+States at time 1: 171
+States at time 2: 6031
+States at time 3: 539
+Total enumerated transitions: 96307
+
+Initial state value: 13,369,639.47
+
+================================================================================
+OPTIMAL MDP POLICY PATH FOR ENUMERATED SMALL INSTANCE
+================================================================================
+
+Period 1
+  Reward: 5,683,991.70
+  Active routes: ['DXB-LHR', 'DXB-KWI', 'DXB-DOH', 'DXB-MCT', 'DXB-HKG', 'DXB-DEL']
+  Opened routes: []
+  Deployed aircraft: ['Airbus A350-900', 'Boeing 787-9', 'Airbus A320']
+  Flight assignments:
+    ('DXB-DEL', 1, 'Airbus A350-900'): 17
+    ('DXB-DEL', 1, 'Boeing 787-9'): 8
+    ('DXB-DOH', 1, 'Airbus A320'): 12
+    ('DXB-HKG', 1, 'Boeing 787-9'): 11
+    ('DXB-KWI', 1, 'Airbus A320'): 12
+    ('DXB-LHR', 1, 'Boeing 787-9'): 12
+    ('DXB-MCT', 1, 'Airbus A320'): 13
+
+Period 2
+  Reward: 4,224,482.67
+  Active routes: ['DXB-LHR', 'DXB-KWI', 'DXB-DOH', 'DXB-MCT', 'DXB-HKG', 'DXB-DEL']
+  Opened routes: []
+  Deployed aircraft: ['Airbus A350-900', 'Boeing 787-9', 'Airbus A320']
+  Flight assignments:
+    ('DXB-DEL', 2, 'Airbus A350-900'): 12
+    ('DXB-DEL', 2, 'Boeing 787-9'): 11
+    ('DXB-DOH', 2, 'Airbus A320'): 18
+    ('DXB-HKG', 2, 'Boeing 787-9'): 8
+    ('DXB-KWI', 2, 'Airbus A320'): 14
+    ('DXB-LHR', 2, 'Boeing 787-9'): 2
+    ('DXB-MCT', 2, 'Airbus A320'): 15
+
+Period 3
+  Reward: 3,461,165.10
+  Active routes: ['DXB-LHR', 'DXB-DOH', 'DXB-MCT', 'DXB-HKG', 'DXB-DEL']
+  Opened routes: []
+  Deployed aircraft: ['Airbus A350-900', 'Boeing 787-9', 'Airbus A320']
+  Flight assignments:
+    ('DXB-DEL', 3, 'Airbus A350-900'): 8
+    ('DXB-DEL', 3, 'Boeing 787-9'): 6
+    ('DXB-DOH', 3, 'Airbus A320'): 10
+    ('DXB-HKG', 3, 'Boeing 787-9'): 10
+    ('DXB-LHR', 3, 'Boeing 787-9'): 6
+    ('DXB-MCT', 3, 'Airbus A320'): 9
+================================================================================
