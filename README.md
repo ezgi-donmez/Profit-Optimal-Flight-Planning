@@ -250,7 +250,12 @@ More details are included in:
 ```text
 mdp_notes.md
 ```
+## Explicit MDP Enumeration Demonstration
 
+In addition to the MILP implementation, the repository includes an explicit MDP enumeration script:
+
+```text
+src/mdp_enumeration.py
 ---
 
 ## Current Experiments
