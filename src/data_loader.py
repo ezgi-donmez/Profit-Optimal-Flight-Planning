@@ -5,7 +5,7 @@ Loads and structures all parameters needed for the Flight Planning MILP
 from the processed CSV files in data/processed/.
 
 Returns a single `data` dict containing sets and parameters as described
-in the mathematical model.
+in the mathematical model (Week 5 Deliverable 3).
 """
 
 import pandas as pd
@@ -32,7 +32,6 @@ def load_data(
     K_ct_value=1,
     alpha=1.0,
 ):
-
     """
     Load MILP parameters from processed CSV files.
 
@@ -179,6 +178,7 @@ def load_data(
         'combos':         combos,
     }
     return data
+
 
 def print_data_summary(data):
     print("=" * 55)
