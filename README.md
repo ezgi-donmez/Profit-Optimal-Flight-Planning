@@ -1,197 +1,451 @@
-# Profit-Optimal Flight Planning 
-### (DS502 - Path B - Ezgi D. S024981)
+# Profit-Optimal Flight Planning
+### DS502 - Path B
 
 ## Problem Description
-A Mixed-Integer Linear Programming (MILP) model that determines optimal flight frequencies across routes, planning periods, and aircraft types to maximize expected profit, subject to fleet-hour capacity and minimum service requirements. An airline operating out of a single hub (DXB) must allocate limited fleet capacity across a set of routes and monthly planning periods. Using historical profitability and cost records, the model selects flight frequencies per route–period–aircraft combination to maximize total expected profit while respecting aircraft-hour limits and optional minimum service levels across route categories (short-, medium-, and long-haul).
+
+This project develops a profit-optimal flight planning model for an airline operating from a single hub. The model decides how many flights should be operated for each route, planning period, and aircraft type in order to maximize total expected profit while respecting operational and financial constraints.
+
+The project is mainly formulated as a Mixed-Integer Linear Programming (MILP) model and is also interpreted as a Markov Decision Process (MDP). The MILP solves the full multi-period planning problem, while the MDP reformulation explains the same planning logic as a sequential decision-making problem.
+
+The model considers:
+
+- route-period-aircraft flight frequency decisions,
+- fleet-hour capacity limits,
+- route activation decisions,
+- minimum service requirements,
+- route-category coverage,
+- route-opening detection,
+- minimum up-time after route opening,
+- fuel-price shock scenarios,
+- optional loss-risk and non-fuel operating cost controls,
+- aircraft deployment decisions,
+- aircraft activation fixed costs,
+- aircraft utilization tracking,
+- maintenance-related capacity reduction after aircraft deployment.
+
+---
 
 ## Repository Structure
 
-```
+```text
 ├── data/
-│   ├── raw/              # Original Kaggle dataset
-│   └── processed/
+│   ├── raw/                         # Original dataset
+│   └── processed/                   # Cleaned and aggregated input files
 │       ├── params_rta.csv
 │       ├── H_bar_at.csv
 │       ├── L_rt.csv
 │       └── route_category.csv
+│
 ├── src/
-│   ├── read_analyze.py 
-│   ├── clean_aggregate.py   # Data prep → data/processed/
-│   ├── data_loader.py       # Load the data
-│   └── model.py             # MILP formulation implemented in gurobi
-│   └── main.py              # to run the model
-├── outputs/              # Solver results, experiment summaries, plots
+│   ├── read_analyze.py              # Initial data reading and exploration
+│   ├── clean_aggregate.py           # Data cleaning and aggregation
+│   ├── data_loader.py               # Loads processed model inputs
+│   ├── model.py                     # Updated MILP formulation
+│   ├── main.py                      # Scenario experiment runner
+│   
+├── outputs/                         # Solver outputs and experiment summaries
+├── mdp_notes.md                     # MDP reformulation notes
 └── README.md
 ```
 
 ---
 
-## Mathematical Model (MILP)
+## Mathematical Model Type
 
-### Sets & Indices
+The main model is a Mixed-Integer Linear Programming (MILP) model.
 
-| Symbol | Description |
-|--------|-------------|
-| r ∈ R | Routes (Origin–Destination pairs) |
-| t ∈ T | Planning periods (months) |
-| a ∈ A | Aircraft types |
-| c ∈ C | Route categories (Short / Medium / Long Haul) |
-| R_c ⊆ R | Subset of routes belonging to category c |
+It is a MILP because:
 
-### Parameters
+- flight frequency decisions are integer variables,
+- route activation decisions are binary variables,
+- route-opening decisions are binary variables,
+- aircraft deployment decisions are binary variables,
+- the objective function and constraints are linear.
 
-| Symbol | Description |
-|--------|-------------|
-| π_rta | Expected profit per flight on route r, period t, aircraft a |
-| h_rta | Expected aircraft-hours per flight for (r, t, a) |
-| H_at | Available aircraft-hours for type a in period t (= α_at · H̄_at) |
-| H̄_at | Historical total aircraft-hours for type a in period t |
-| M_rta | Maximum allowed flights for (r, t, a) — data-driven upper bound |
-| L_rt | Minimum flights required on route r in period t if served |
-| K_ct | Minimum number of routes to serve in category c during period t |
-| α_at | Capacity multiplier (experiment parameter; baseline = 1.0) |
-| f_rta | Average fuel cost per flight for (r, t, a) |
-| δ | Fuel price shock factor; adjusted profit: π_rta^(δ) = π_rta − δ · f_rta |
-
-### Decision Variables
-
-| Symbol | Domain | Description |
-|--------|--------|-------------|
-| x_rta | ℤ₊ | Number of flights on route r, period t, aircraft type a |
-| y_rt | {0, 1} | 1 if route r is served in period t, else 0 |
-
-### Objective
-
-Maximize total expected profit:
-
-```
-max  Σ_{r,t,a}  π_rta^(δ) · x_rta
-```
-### Constraints
-
-| # | Constraint | Quantifier | Description |
-|---|-----------|------------|-------------|
-| (2) | Σ_r h_rta · x_rta ≤ H_at | ∀a, t | Fleet-hour capacity per aircraft type and period |
-| (3) | x_rta ≤ M_rta · y_rt | ∀r, t, a | Link flights to route activation; no flights if route not served |
-| (4) | Σ_a x_rta ≥ L_rt · y_rt | ∀r, t | Minimum flights when a route is served |
-| (5) | 0 ≤ x_rta ≤ M_rta | ∀r, t, a | Non-negativity and data-driven upper bounds |
-| (6) | Σ_{r∈R_c} y_rt ≥ K_ct | ∀c, t | Category coverage: at least K_ct routes served per category |
-| (7) | x_rta ∈ ℤ₊ |  | Integer flight counts |
-| (8) | y_rt ∈ {0, 1} |  | Binary service indicators |
+The model is implemented in Python and solved with Gurobi.
 
 ---
-## Solver
 
-**Primary:** [Gurobi](https://www.gurobi.com/) (via `gurobipy`)  
+## Sets and Indices
+
+| Symbol | Description |
+|---|---|
+| `r ∈ R` | Set of routes |
+| `t ∈ T` | Set of planning periods/months |
+| `a ∈ A` | Set of aircraft types |
+| `c ∈ C` | Set of route categories |
+| `R_c ⊆ R` | Routes belonging to category `c` |
+| `T_open` | Periods where a route can be newly opened |
+| `T_late` | Late periods where new route openings are not allowed |
+
+---
+
+## Main Parameters
+
+| Symbol | Description |
+|---|---|
+| `pi_rta` | Base expected profit per flight |
+| `f_rta` | Fuel cost per flight |
+| `delta` | Fuel-price shock factor |
+| `pi_rta_delta` | Scenario-adjusted profit per flight |
+| `h_rta` | Flight-hours required per flight |
+| `H_bar_at` | Historical available aircraft-hours |
+| `alpha` | Capacity multiplier |
+| `H_at` | Effective fleet-hour capacity |
+| `M_rta` | Maximum allowable flights |
+| `L_rt` | Minimum flights if a route is active |
+| `K_ct` | Minimum number of active routes in a category |
+| `SC_r` | Route startup cost |
+| `N_min` | Minimum up-time after route opening |
+| `Omega` | Optional loss-risk cap |
+| `B_nfoc` | Optional non-fuel operating cost budget |
+| `FC_a` | Aircraft activation fixed cost |
+| `N_maint` | Maintenance lookback window |
+| `gamma_maint` | Maintenance intensity parameter |
+
+---
+
+## Decision Variables
+
+| Symbol | Domain | Description |
+|---|---|---|
+| `x_rta` | Integer | Number of flights on route `r`, period `t`, aircraft type `a` |
+| `y_rt` | Binary | 1 if route `r` is active in period `t`, 0 otherwise |
+| `z_rt` | Binary | 1 if route `r` is newly opened in period `t`, 0 otherwise |
+| `u_at` | Binary | 1 if aircraft type `a` is deployed in period `t`, 0 otherwise |
+| `W_at` | Integer | Total flights assigned to aircraft type `a` in period `t` |
+
+---
+
+## Objective Function
+
+The objective is to maximize total scenario-adjusted profit minus route startup costs and aircraft activation fixed costs:
+
+```text
+max Σ_{r,t,a} pi_rta_delta x_rta
+    - Σ_{r,t} SC_r z_rt
+    - Σ_{a,t} FC_a u_at
+```
+
+The first term represents profit from operated flights. The second term penalizes newly opened routes. The third term penalizes aircraft deployment.
+
+---
+
+## Main Constraints
+
+The model includes the following constraint groups:
+
+| Constraint Group | Description |
+|---|---|
+| Fleet-hour capacity | Total flight-hours cannot exceed available capacity |
+| Route activation linking | Flights can only be assigned to active routes |
+| Minimum service | Active routes must receive minimum flight service |
+| Category coverage | Each route category must satisfy minimum coverage |
+| Route-opening detection | Detects whether a route is newly opened |
+| Minimum up-time | Newly opened routes must remain active for a required number of periods |
+| No late openings | Prevents route openings too close to the end of the horizon |
+| Loss-risk cap | Limits total exposure to loss-making flight combinations |
+| NFOC budget | Limits total non-fuel operating cost |
+| Aircraft utilization | Tracks total flights by aircraft type and period |
+| Aircraft activation | Links aircraft deployment to actual usage |
+| Maintenance-capacity reduction | Reduces future capacity after aircraft deployment |
+
+---
+
+## Maintenance-Capacity Reduction
+
+In the updated implementation, maintenance is modeled as a capacity-reduction rule rather than a full aircraft grounding rule.
+
+The implemented constraint is:
+
+```text
+sum_r h_rta x_rta + sum_{k=1}^{N_maint} gamma_maint H_at u_{a,t-k} <= H_at
+```
+
+This means that if aircraft type `a` was deployed in previous periods, a fraction of its current capacity is consumed by maintenance. The aircraft type can still operate, but with reduced available capacity.
+
+If:
+
+```text
+gamma_maint = 0
+```
+
+then the maintenance effect is deactivated.
+
+---
+
+## MDP Reformulation
+
+For the Week 9 & 10 deliverable, the MILP model is also reformulated as a finite-horizon Markov Decision Process (MDP).
+
+The MDP does not replace the MILP. It explains the same multi-period planning problem as a sequential decision-making process.
+
+### State
+
+A state at period `t` is represented as:
+
+```text
+s_t = (t, b_t, m_t, q_t, y_{t-1}, Omega_t_rem, B_t_nfoc_rem)
+```
+
+where:
+
+- `t` is the current planning period,
+- `b_t` is the vector of effective fleet-hour capacities,
+- `m_t` is the vector of remaining minimum-up-time commitments,
+- `q_t` is the aircraft maintenance-memory vector,
+- `y_{t-1}` is the previous period route-activity vector,
+- `Omega_t_rem` is the remaining loss-risk allowance, if active,
+- `B_t_nfoc_rem` is the remaining non-fuel operating cost budget, if active.
+
+### Action
+
+At state `s_t`, the action is:
+
+```text
+a_t = (x_t, y_t, z_t, u_t)
+```
+
+where the action includes current-period flight assignments, route activation decisions, route-opening decisions, and aircraft deployment decisions.
+
+### Transition
+
+The transition is deterministic:
+
+```text
+s_{t+1} = F_t(s_t, a_t)
+```
+
+The transition updates the planning period, route commitments, aircraft maintenance-memory, previous route activity, and optional remaining financial budgets.
+
+### Reward
+
+The immediate reward is the current-period contribution to the MILP objective:
+
+```text
+r_t(s_t, a_t) =
+sum_{r,a} pi_rta_delta x_rta
+- sum_r SC_r z_rt
+- sum_a FC_a u_at
+```
+
+### Bellman Equation
+
+The deterministic Bellman recursion is:
+
+```text
+V_t(s_t) = max_{a_t in A(s_t)} { r_t(s_t, a_t) + V_{t+1}(F_t(s_t, a_t)) }
+```
+
+with terminal condition:
+
+```text
+V_{|T|+1}(s) = 0
+```
+
+The current MDP is finite-horizon, deterministic, fully observable, and undiscounted.
+
+More details are included in:
+
+```text
+mdp_notes.md
+```
+
+---
+
+## Current Experiments
+
+The current implementation in `main_v2.py` runs the following scenario groups:
+
+| # | Scenario | Setting |
+|---|---|---|
+| 1 | Small baseline | 10 routes, 3 months, 3 aircraft |
+| 2 | Fuel shock | `delta ∈ {0, 0.10, 0.25}` |
+| 3 | Capacity | `alpha ∈ {0.30, 0.60, 1.00}` |
+| 4 | Minimum up-time | `N_min ∈ {1, 2, 3}` |
+| 5 | Maintenance window | `N_maint ∈ {1, 2, 3}` |
+| 6 | Maintenance intensity | `gamma_maint ∈ {0.0, 0.10, 0.20, 0.30}` |
+| 7 | Aircraft activation cost | `FC_a ∈ {0, 50000, 100000}` |
+| 8 | Medium baseline | 20 routes, 8 months, 4 aircraft |
+| 9 | Large baseline | 16 routes, 12 months, 6 aircraft |
+| 10 | Large fuel shock | `delta ∈ {0, 0.10, 0.25}` |
+| 11 | Large maintenance intensity | `gamma_maint ∈ {0.0, 0.20, 0.40}` |
+
+The large instance uses 16 routes because the restricted Gurobi license has a constraint-size limit. A full 30-route instance would require a larger Gurobi academic license.
+
+---
+
+## Output Metrics
+
+The following metrics are reported across scenarios:
+
+- objective value,
+- solver status,
+- runtime,
+- number of variables,
+- number of constraints,
+- active route-periods,
+- route openings,
+- aircraft deployments,
+- aircraft utilization,
+- number of negative-profit combinations.
+
+---
+
+## Current Results Summary
+
+The current outputs are consistent with the model logic:
+
+- Fuel shock reduces total objective value.
+- Capacity reduction reduces total objective value.
+- Higher aircraft activation cost reduces total objective value.
+- Maintenance window changes may have limited impact in small instances if there is enough capacity slack.
+- Higher maintenance intensity reduces objective value, especially in larger instances.
+- Medium and large instances are solved within the selected 1% MIP gap tolerance.
+
+Example results from the current runs:
+
+| Scenario | Objective |
+|---|---:|
+| Small baseline | `$25,604,427.93` |
+| Medium baseline | `$127,270,423.45` |
+| Large baseline | `$492,242,030.26` |
+| Large fuel shock, delta = 0.25 | `$451,810,631.90` |
+| Large maintenance intensity, gamma = 0.40 | `$379,629,960.48` |
+
+---
 
 ## Solver / Library Requirements
 
-This project requires the following environment and libraries:
+This project requires:
 
-- **Python 3.10+**
-- **pandas**
-- **gurobipy**
-- an active **Gurobi license** (academic)
+- Python 3.10+
+- pandas
+- gurobipy
+- active Gurobi license
 
-The optimization model is solved using **Gurobi Optimizer**. In the current small-instance run, the solver was executed with a **120-second time limit** and a **1% MIP gap tolerance**.
+Optional libraries for later analysis or visualization:
 
-## How to run the code
-1. Place the processed input files inside `data/processed/`:
-   - `params_rta.csv`
-   - `H_bar_at.csv`
-   - `L_rt.csv`
-   - `route_category.csv`
-
-2. Install the required libraries:
-pandas gurobipy
-
-3. Run the main script from the project root directory:
-src/main.py
-
----
-## Small Instance Output Explanation
-The small test instance was solved successfully to optimality using a reduced real-data subset with 10 routes, 3 months, and 3 aircraft types, corresponding to 36 feasible (r,t,a) combinations and a balanced category mix of 3 Long Haul, 3 Medium Haul, and 4 Short Haul routes. The resulting MILP contained 66 variables and 84 constraints, and Gurobi found the OPTIMAL solution in 0.001 seconds with an objective value of $25,573,426.66, which represents the maximum expected profit for this reduced instance. The solution activated 30 route-month pairs in total, which is consistent with serving all 10 selected routes across 3 months, and the output also shows the corresponding flight allocations by aircraft type for each active route-month pair.  `small_instance_output.txt` contains the full raw terminal output of this first small-instance run, including the data summary, Gurobi solver log, and detailed route-level solution results.
-
-## Planned Experiments (≥ 10 scenarios)
-
-All experiments vary one or more parameters relative to the baseline (α = 1.0, δ = 0).
-
-| # | Scenario | Parameter Change |
-|---|----------|-----------------|
-| 1 | Baseline | α = 1.0, δ = 0, no min-service |
-| 2 | Capacity –20% | α = 0.80 |
-| 3 | Capacity –40% | α = 0.60 |
-| 4 | Capacity +20% | α = 1.20 |
-| 5 | Fuel shock +10% | δ = 0.10 |
-| 6 | Fuel shock +25% | δ = 0.25 |
-| 7 | Min service ON (loose) | L_rt = 1 per served route |
-| 8 | Min service ON (tight) | L_rt = 3 per served route |
-| 9 | Category coverage ON | K_ct = 2 per category |
-| 10 | Capacity –20% + Fuel shock +10% | α = 0.80, δ = 0.10 |
-| 11 | Capacity –40% + Fuel shock +25% | α = 0.60, δ = 0.25 |
-| 12 | Seasonal aggregation | Periods = seasons instead of months |
-
-Key output metrics tracked across scenarios: total expected profit, number of routes served, fleet utilization rate, routes dropped per category.
+- numpy
+- matplotlib
+- plotly
 
 ---
 
-## Method
-Mixed-Integer Linear Programming (MILP) solved with Gurobi. 
-This project is naturally formulated as a Mixed-Integer Linear Program (MILP) because the key decisions include both discrete and logical choices. The number of flights assigned to each route–period–aircraft combination must be an integer because operating 3.7 flights is not meaningful, and minimum-service/coverage requirements introduce binary “served/not served” decisions for routes. These logical constraints are expressed through standard linking formulations and, while fleet-hour capacity constraints remain linear. Therefore, MILP provides the correct modeling class-capturing integrality and service logic-while allowing efficient solution with solvers such as Gurobi under the project’s scope and timeline.
+## How to Run the Code
 
-**Assumptions**
-- Profit per flight and flight-hours are estimated from historical data and treated as deterministic.
-- Aircraft availability is captured through aggregate fleet-hours per type and period; tail-level rotations are not modeled.
-- Routes are independent except for shared fleet-hour capacity (no spill/recapture or competition effects).
-- Uncertainty is handled via scenario parameters rather than stochastic optimization.
+1. Clone the repository:
 
-**Simplifications**
-- No crew pairing, maintenance routing, airport slot constraints, or aircraft rotation feasibility.
-- Planning is at the route-frequency level (how many flights), not a full timetable.
+```bash
+git clone https://github.com/ezgi-donmez/Profit-Optimal-Flight-Planning.git
+cd Profit-Optimal-Flight-Planning
+```
 
-**Limitations**
-- Public dataset only — internal airline constraints (maintenance calendars, slot portfolios) are excluded.
-- Results are decision-support recommendations; operational feasibility should be verified separately.
+2. Install required libraries:
+
+```bash
+pip install pandas numpy gurobipy
+```
+
+3. Place the processed input files inside `data/processed/`:
+
+```text
+params_rta.csv
+H_bar_at.csv
+L_rt.csv
+route_category.csv
+```
+
+4. Run the main experiment script:
+
+```bash
+python src/main_v2.py
+```
 
 ---
-## DS502 Roadmap 
 
-### D1 — Topic & Repo Setup (Week 3)
-- Repo structure: `data/raw`, `data/processed`, `src`, `outputs`
-- README: problem + dataset link + plan + roles
+## Assumptions
 
-### D2 — Proposal (Week 4)
-- Analyze the data
-- Finalize scope: monthly flight frequency planning for DXB routes
-- Assumptions + data plan: parameter estimation for (route, month, aircraft)
-- Baseline MILP: objective + core constraints + scenario list (10+)
+The current model uses the following assumptions:
 
-### D3 — Mathematical Model v1 (Week 5)
-- Write full notation: sets/parameters/variables/objective/constraints
-- Define how π_rta, h_rta, c_rta are computed from aggregated data
+- Profit per flight and flight-hours are estimated from historical data.
+- Scenario-adjusted profit is deterministic once `delta` is selected.
+- Aircraft availability is represented using aggregate fleet-hours by aircraft type and period.
+- Aircraft maintenance is represented as a capacity reduction, not full grounding.
+- Tail-level aircraft rotations are not modeled.
+- Crew scheduling is not modeled.
+- Airport slot constraints are not modeled.
+- Demand uncertainty is not modeled directly.
+- Optional financial constraints can be activated or deactivated.
 
-### D4 — Implementation v1 + Baseline Results (Week 6)
-- `src/01_clean_aggregate.py` → `data/processed/params_rta.csv`
-- `src/02_data_loader.py` & `src/03_model.py` & `src/04_main.py` → baseline MILP solution + summary metrics
-- Baseline outputs: total profit, utilization, route coverage
+---
 
-### D5 — Experiment Plan + Other Components (Week 7)
-- Lock experiment matrix (≥10 runs): capacity scaling, fuel shock, min service tightening, budget cap
-- Build simplified flow/assignment baseline for comparison (aircraft-hours allocation)
+## Simplifications
 
-### Week 8 — First Progress Check
-- Working pipeline + baseline + at least 3 scenario results
+The model is a tactical route-frequency planning model, not a full airline timetable model.
 
-### D6 — Implementation v2 + Extended Results (Week 9)
-- Add 1–2 realism constraints (budget and/or route-category service and/or loss-risk limit)
-- Run full experiment set and export the results
+The following details are simplified or excluded:
 
-### D7 — ML/Advanced (Weeks 10–11)
-- predict profit-per-flight using route/season/aircraft features and re-optimize
+- individual aircraft tail assignment,
+- detailed aircraft rotation feasibility,
+- crew pairing,
+- airport slot allocation,
+- passenger connection structure,
+- passenger spill and recapture,
+- stochastic demand realization.
 
-### D8 — Final Report (Week 12)
-- Final report: data prep, MILP, flow baseline, experiments, results, limitations
-- Slides: model summary + key scenario insights
+---
 
-### D9 — Presentation (Weeks 13–14)
-- Final presentation with results, plots, and recommendations
+## Limitations
+
+The model provides decision-support recommendations rather than a directly deployable airline schedule.
+
+Main limitations include:
+
+- public data limitations,
+- aggregate capacity representation,
+- deterministic scenario treatment,
+- simplified maintenance modeling,
+- no detailed passenger demand model,
+- no full timetable feasibility check.
+
+---
+
+## DS502 Roadmap
+
+### D1 — Topic and Repository Setup
+
+- Created project repository.
+- Defined the initial flight planning problem.
+- Prepared initial folder structure.
+
+### D2 — Proposal
+
+- Analyzed the route profitability dataset.
+- Finalized the scope as route-frequency planning.
+- Defined initial assumptions and scenario plan.
+
+### D3 — Mathematical Model
+
+- Defined the MILP formulation.
+- Introduced sets, parameters, decision variables, objective, and constraints.
+
+### D4 — Implementation and Baseline Results
+
+- Implemented the baseline MILP.
+- Ran small-instance tests.
+- Exported solver output and route-level results.
+
+### D6 — MDP Reformulation and Extended Experiments
+
+- Added route-opening and minimum-up-time logic.
+- Added aircraft activation variables.
+- Added aircraft utilization tracking.
+- Added maintenance-related capacity reduction.
+- Reformulated the model as a finite-horizon MDP.
+- Defined states, actions, transitions, rewards, policy, horizon, and Bellman equation.
+- Ran scenario experiments for fuel shock, capacity, minimum up-time, maintenance, activation cost, and instance size.
+
+
+
+
