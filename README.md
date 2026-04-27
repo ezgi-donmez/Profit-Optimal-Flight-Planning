@@ -256,7 +256,7 @@ In addition to the MILP implementation, the repository includes an explicit MDP 
 
 ```text
 src/mdp_enumeration.py
----
+```
 
 ## Current Experiments
 
