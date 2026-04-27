@@ -1,0 +1,1089 @@
+########################################################################
+# STEP 1 — SMALL BASELINE  (10 routes, 3 months, 3 aircraft)
+########################################################################
+=======================================================
+DATA SUMMARY
+=======================================================
+  Routes   : 10
+  Periods  : 3 months [1, 2, 3]
+  Aircraft : 3
+  (r,t,a) combos : 36
+
+  Category breakdown:
+    Long Haul: 3 routes
+    Medium Haul: 3 routes
+    Short Haul: 4 routes
+=======================================================
+Set parameter Username
+Set parameter LicenseID to value 2782186
+Academic license - for non-commercial use only - expires 2027-02-23
+Set parameter TimeLimit to value 120
+Set parameter MIPGap to value 0.01
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 155H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 22 logical processors, using up to 22 threads
+
+Non-default parameters:
+TimeLimit  120
+MIPGap  0.01
+
+Optimize a model with 167 rows, 94 columns and 438 nonzeros (Max)
+Model fingerprint: 0x19f8c569
+Model has 36 linear objective coefficients
+Variable types: 0 continuous, 94 integer (49 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 2e+02]
+  Objective range  [1e+03, 3e+05]
+  Bounds range     [1e+00, 7e+01]
+  RHS range        [1e+00, 1e+03]
+
+Found heuristic solution: objective 1862631.0000
+Presolve removed 167 rows and 94 columns
+Presolve time: 0.00s
+Presolve: All rows and columns removed
+
+Explored 0 nodes (0 simplex iterations) in 0.01 seconds (0.00 work units)
+Thread count was 1 (of 22 available processors)
+
+Solution count 2: 2.56044e+07 1.86263e+06 
+
+Optimal solution found (tolerance 1.00e-02)
+Best objective 2.560442793000e+07, best bound 2.560442793000e+07, gap 0.0000%
+
+========================================================================
+  Small — Baseline
+  delta=0.00 | alpha=1.00 | N_min=2 | N_maint=2 | gamma=0.20
+========================================================================
+  Status      : OPTIMAL
+  Runtime     : 0.016 s
+  Variables   : 94  |  Constraints: 167
+  Objective   : $       25,604,427.93  (USD)
+
+  Active route-periods : 29
+    DXB-BAH          Month  1  | total=  16  [Airbus A320:16]
+    DXB-BAH          Month  2  | total=  19  [Airbus A320:19]
+    DXB-BAH          Month  3  | total=  14  [Airbus A320:14]
+    DXB-DEL          Month  1  | total=  25  [Airbus A350-900:17  Boeing 787-9:8]
+    DXB-DEL          Month  2  | total=  23  [Airbus A350-900:12  Boeing 787-9:11]
+    DXB-DEL          Month  3  | total=  14  [Boeing 787-9:6  Airbus A350-900:8]
+    DXB-DOH          Month  1  | total=  12  [Airbus A320:12]
+    DXB-DOH          Month  2  | total=  18  [Airbus A320:18]
+    DXB-DOH          Month  3  | total=  10  [Airbus A320:10]
+    DXB-HKG          Month  1  | total=  11  [Boeing 787-9:11]
+    DXB-HKG          Month  2  | total=   8  [Boeing 787-9:8]
+    DXB-HKG          Month  3  | total=  10  [Boeing 787-9:10]
+    DXB-IST          Month  1  | total=  20  [Boeing 787-9:6  Airbus A350-900:14]
+    DXB-IST          Month  2  | total=  20  [Airbus A350-900:10  Boeing 787-9:10]
+    DXB-IST          Month  3  | total=  17  [Airbus A350-900:7  Boeing 787-9:10]
+    DXB-JFK          Month  1  | total=  11  [Boeing 787-9:11]
+    DXB-JFK          Month  2  | total=   8  [Boeing 787-9:8]
+    DXB-JFK          Month  3  | total=   7  [Boeing 787-9:7]
+    DXB-KWI          Month  1  | total=  12  [Airbus A320:12]
+    DXB-KWI          Month  2  | total=  14  [Airbus A320:14]
+    DXB-LHR          Month  1  | total=  12  [Boeing 787-9:12]
+    DXB-LHR          Month  2  | total=   2  [Boeing 787-9:2]
+    DXB-LHR          Month  3  | total=   6  [Boeing 787-9:6]
+    DXB-MCT          Month  1  | total=  13  [Airbus A320:13]
+    DXB-MCT          Month  2  | total=  15  [Airbus A320:15]
+    DXB-MCT          Month  3  | total=   9  [Airbus A320:9]
+    DXB-SYD          Month  1  | total=   8  [Boeing 787-9:8]
+    DXB-SYD          Month  2  | total=   5  [Boeing 787-9:5]
+    DXB-SYD          Month  3  | total=  10  [Boeing 787-9:10]
+
+  Aircraft deployments (u=1):
+    Airbus A320           ->  M1(W=53), M2(W=66), M3(W=33)
+    Airbus A350-900       ->  M1(W=31), M2(W=22), M3(W=15)
+    Boeing 787-9          ->  M1(W=56), M2(W=44), M3(W=49)
+
+
+########################################################################
+# STEP 2 — FUEL-SHOCK  (delta ∈ {0, 0.10, 0.25})
+########################################################################
+  delta=0.00  neg-pi=  2  ->  $25,604,427.93
+  delta=0.10  neg-pi=  3  ->  $24,692,000.76
+  delta=0.25  neg-pi=  3  ->  $23,324,466.52
+
+====================================================================================================
+  SCENARIO TABLE  [Fuel-shock — Small]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.10   1.00     2    2   0.20     3     OPTIMAL  $       24,692,000.76    27     0     9   0.001s
+   0.25   1.00     2    2   0.20     3     OPTIMAL  $       23,324,466.52    27     0     9   0.001s
+====================================================================================================
+
+########################################################################
+# STEP 3 — CAPACITY  (alpha ∈ {0.30, 0.60, 1.00})
+########################################################################
+  alpha=0.30  ->  $19,734,837.15
+  alpha=0.60  ->  $24,975,208.99
+  alpha=1.00  ->  $25,604,427.93
+
+====================================================================================================
+  SCENARIO TABLE  [Capacity — Small]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   0.30     2    2   0.20     2     OPTIMAL  $       19,734,837.15    22     1     9   0.010s
+   0.00   0.60     2    2   0.20     2     OPTIMAL  $       24,975,208.99    27     0     9   0.004s
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+====================================================================================================
+
+########################################################################
+# STEP 4 — MIN-UP-TIME  (N_min ∈ {1, 2, 3})
+########################################################################
+  N_min=1  opens=1  ->  $25,609,775.21
+  N_min=2  opens=0  ->  $25,604,427.93
+  N_min=3  opens=0  ->  $25,569,357.49
+
+====================================================================================================
+  SCENARIO TABLE  [Min-up-time — Small]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     1    2   0.20     2     OPTIMAL  $       25,609,775.21    28     1     9   0.000s
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     3    2   0.20     2     OPTIMAL  $       25,569,357.49    30     0     9   0.000s
+====================================================================================================
+
+########################################################################
+# STEP 5 — MAINTENANCE WINDOW  (N_maint ∈ {1, 2, 3})
+########################################################################
+  N_maint=1  ->  $25,604,427.93
+  N_maint=2  ->  $25,604,427.93
+  N_maint=3  ->  $25,604,427.93
+
+====================================================================================================
+  SCENARIO TABLE  [Maintenance window — Small]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     2    1   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     2    3   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+====================================================================================================
+
+########################################################################
+# STEP 6 — MAINTENANCE INTENSITY  (gamma ∈ {0.0, 0.10, 0.20, 0.30})
+# Shows how much profit drops as maintenance consumes more capacity.
+########################################################################
+  gamma=0.00  ->  $25,604,427.93
+  gamma=0.10  ->  $25,604,427.93
+  gamma=0.20  ->  $25,604,427.93
+  gamma=0.30  ->  $25,349,489.66
+
+====================================================================================================
+  SCENARIO TABLE  [Maintenance intensity — Small]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     2    2   0.00     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     2    2   0.10     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     2    2   0.30     2     OPTIMAL  $       25,349,489.66    27     0     9   0.003s
+====================================================================================================
+
+########################################################################
+# STEP 7 — AIRCRAFT ACTIVATION COST  (FC_a ∈ {0, 50K, 100K})
+# FC_a is the fixed cost charged each time an aircraft type is deployed.
+########################################################################
+  FC_a=      0  ->  $25,604,427.93  (u=1 count: 9)
+  FC_a= 50,000  ->  $25,154,427.93  (u=1 count: 9)
+  FC_a=100,000  ->  $24,704,427.93  (u=1 count: 9)
+
+====================================================================================================
+  SCENARIO TABLE  [Activation cost — Small]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,604,427.93    29     0     9   0.001s
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       25,154,427.93    29     0     9   0.001s
+   0.00   1.00     2    2   0.20     2     OPTIMAL  $       24,704,427.93    29     0     9   0.001s
+====================================================================================================
+
+########################################################################
+# STEP 8 — MEDIUM BASELINE  (20 routes, 8 months, 4 aircraft)
+########################################################################
+=======================================================
+DATA SUMMARY
+=======================================================
+  Routes   : 20
+  Periods  : 8 months [1, 2, 3, 4, 5, 6, 7, 8]
+  Aircraft : 4
+  (r,t,a) combos : 232
+
+  Category breakdown:
+    Long Haul: 10 routes
+    Medium Haul: 4 routes
+    Short Haul: 6 routes
+=======================================================
+Set parameter Username
+Set parameter LicenseID to value 2782186
+Academic license - for non-commercial use only - expires 2027-02-23
+Set parameter TimeLimit to value 300
+Set parameter MIPGap to value 0.01
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 155H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 22 logical processors, using up to 22 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  0.01
+
+Optimize a model with 1072 rows, 576 columns and 3135 nonzeros (Max)
+Model fingerprint: 0xd83d4a4a
+Model has 232 linear objective coefficients
+Variable types: 0 continuous, 576 integer (312 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 2e+02]
+  Objective range  [2e+01, 3e+05]
+  Bounds range     [1e+00, 1e+02]
+  RHS range        [1e+00, 1e+03]
+
+Found heuristic solution: objective 2737862.5800
+Presolve removed 764 rows and 324 columns
+Presolve time: 0.01s
+Presolved: 308 rows, 252 columns, 911 nonzeros
+Found heuristic solution: objective 4.282957e+07
+Variable types: 0 continuous, 252 integer (108 binary)
+Found heuristic solution: objective 4.348652e+07
+
+Root relaxation: objective 1.287760e+08, 102 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 1.2878e+08    0   16 4.3487e+07 1.2878e+08   196%     -    0s
+H    0     0                    1.122130e+08 1.2878e+08  14.8%     -    0s
+H    0     0                    1.260617e+08 1.2878e+08  2.15%     -    0s
+H    0     0                    1.261871e+08 1.2878e+08  2.05%     -    0s
+H    0     0                    1.272330e+08 1.2878e+08  1.21%     -    0s
+H    0     0                    1.272704e+08 1.2878e+08  1.18%     -    0s
+
+Cutting planes:
+  Gomory: 6
+  MIR: 4
+  StrongCG: 5
+  RLT: 5
+  Relax-and-lift: 3
+
+Explored 1 nodes (158 simplex iterations) in 0.03 seconds (0.01 work units)
+Thread count was 22 (of 22 available processors)
+
+Solution count 8: 1.2727e+08 1.27233e+08 1.26187e+08 ... 2.73786e+06
+
+Optimal solution found (tolerance 1.00e-02)
+Best objective 1.272704234500e+08, best bound 1.276048814643e+08, gap 0.2628%
+
+========================================================================
+  Medium — Baseline
+  delta=0.00 | alpha=1.00 | N_min=2 | N_maint=2 | gamma=0.20
+========================================================================
+  Status      : OPTIMAL
+  Runtime     : 0.043 s
+  Variables   : 576  |  Constraints: 1072
+  Objective   : $      127,270,423.45  (USD)
+
+  Active route-periods : 119
+    DXB-BAH          Month  1  | total=  29  [Airbus A320:16  Boeing 737-800:13]
+    DXB-BAH          Month  2  | total=  30  [Airbus A320:19  Boeing 737-800:11]
+    DXB-BAH          Month  3  | total=  25  [Airbus A320:14  Boeing 737-800:11]
+    DXB-BAH          Month  4  | total=  29  [Airbus A320:15  Boeing 737-800:14]
+    DXB-BAH          Month  5  | total=  29  [Airbus A320:16  Boeing 737-800:13]
+    DXB-BKK          Month  1  | total=   8  [Airbus A350-900:8]
+    DXB-BKK          Month  2  | total=   6  [Airbus A350-900:6]
+    DXB-BKK          Month  3  | total=  11  [Airbus A350-900:11]
+    DXB-BKK          Month  4  | total=  11  [Airbus A350-900:11]
+    DXB-BKK          Month  5  | total=   7  [Airbus A350-900:7]
+    DXB-BKK          Month  6  | total=   5  [Airbus A350-900:5]
+    DXB-BKK          Month  7  | total=   7  [Airbus A350-900:7]
+    DXB-BKK          Month  8  | total=   9  [Airbus A350-900:9]
+    DXB-BOM          Month  1  | total=  14  [Airbus A350-900:6  Boeing 787-9:8]
+    DXB-BOM          Month  2  | total=  19  [Airbus A350-900:12  Boeing 787-9:7]
+    DXB-BOM          Month  3  | total=  18  [Airbus A350-900:6  Boeing 787-9:12]
+    DXB-BOM          Month  4  | total=  17  [Boeing 787-9:9  Airbus A350-900:8]
+    DXB-BOM          Month  5  | total=  20  [Airbus A350-900:12  Boeing 787-9:8]
+    DXB-BOM          Month  6  | total=  20  [Boeing 787-9:10  Airbus A350-900:10]
+    DXB-BOM          Month  7  | total=  18  [Airbus A350-900:8  Boeing 787-9:10]
+    DXB-BOM          Month  8  | total=  17  [Airbus A350-900:8  Boeing 787-9:9]
+    DXB-CDG          Month  1  | total=   7  [Boeing 787-9:7]
+    DXB-CDG          Month  2  | total=  11  [Boeing 787-9:11]
+    DXB-CDG          Month  3  | total=  11  [Boeing 787-9:11]
+    DXB-CDG          Month  4  | total=   9  [Boeing 787-9:9]
+    DXB-CDG          Month  5  | total=  10  [Boeing 787-9:10]
+    DXB-CDG          Month  6  | total=   8  [Boeing 787-9:8]
+    DXB-CDG          Month  7  | total=  10  [Boeing 787-9:10]
+    DXB-CDG          Month  8  | total=  12  [Boeing 787-9:12]
+    DXB-DEL          Month  1  | total=  25  [Boeing 787-9:8  Airbus A350-900:17]
+    DXB-DEL          Month  2  | total=  23  [Airbus A350-900:12  Boeing 787-9:11]
+    DXB-DEL          Month  3  | total=  14  [Boeing 787-9:6  Airbus A350-900:8]
+    DXB-DEL          Month  4  | total=  18  [Airbus A350-900:11  Boeing 787-9:7]
+    DXB-DEL          Month  5  | total=  11  [Boeing 787-9:8  Airbus A350-900:3]
+    DXB-DEL          Month  6  | total=  18  [Airbus A350-900:11  Boeing 787-9:7]
+    DXB-DEL          Month  7  | total=  18  [Boeing 787-9:9  Airbus A350-900:9]
+    DXB-DEL          Month  8  | total=  19  [Airbus A350-900:11  Boeing 787-9:8]
+    DXB-DOH          Month  1  | total=  30  [Airbus A320:12  Boeing 737-800:18]
+    DXB-DOH          Month  2  | total=  28  [Airbus A320:18  Boeing 737-800:10]
+    DXB-DOH          Month  3  | total=  28  [Airbus A320:10  Boeing 737-800:18]
+    DXB-DOH          Month  4  | total=  11  [Airbus A320:11]
+    DXB-DOH          Month  5  | total=  18  [Boeing 737-800:18]
+    DXB-FRA          Month  1  | total=  15  [Boeing 787-9:15]
+    DXB-FRA          Month  2  | total=   7  [Boeing 787-9:7]
+    DXB-FRA          Month  3  | total=  11  [Boeing 787-9:11]
+    DXB-FRA          Month  4  | total=   7  [Boeing 787-9:7]
+    DXB-FRA          Month  5  | total=  11  [Boeing 787-9:11]
+    DXB-FRA          Month  6  | total=   6  [Boeing 787-9:6]
+    DXB-FRA          Month  7  | total=  14  [Boeing 787-9:14]
+    DXB-FRA          Month  8  | total=   7  [Boeing 787-9:7]
+    DXB-HKG          Month  1  | total=  11  [Boeing 787-9:11]
+    DXB-HKG          Month  2  | total=   8  [Boeing 787-9:8]
+    DXB-HKG          Month  3  | total=  10  [Boeing 787-9:10]
+    DXB-HKG          Month  4  | total=   8  [Boeing 787-9:8]
+    DXB-HKG          Month  5  | total=   6  [Boeing 787-9:6]
+    DXB-HKG          Month  6  | total=   6  [Boeing 787-9:6]
+    DXB-HKG          Month  7  | total=   8  [Boeing 787-9:8]
+    DXB-HKG          Month  8  | total=  10  [Boeing 787-9:10]
+    DXB-IST          Month  1  | total=  20  [Airbus A350-900:14  Boeing 787-9:6]
+    DXB-IST          Month  2  | total=  20  [Boeing 787-9:10  Airbus A350-900:10]
+    DXB-IST          Month  3  | total=   9  [Airbus A350-900:7  Boeing 787-9:2]
+    DXB-IST          Month  4  | total=  18  [Boeing 787-9:11  Airbus A350-900:7]
+    DXB-IST          Month  5  | total=  18  [Airbus A350-900:8  Boeing 787-9:10]
+    DXB-IST          Month  6  | total=  19  [Boeing 787-9:13  Airbus A350-900:6]
+    DXB-IST          Month  7  | total=   2  [Boeing 787-9:2]
+    DXB-IST          Month  8  | total=  14  [Boeing 787-9:1  Airbus A350-900:13]
+    DXB-JFK          Month  1  | total=  11  [Boeing 787-9:11]
+    DXB-JFK          Month  2  | total=   8  [Boeing 787-9:8]
+    DXB-JFK          Month  3  | total=   7  [Boeing 787-9:7]
+    DXB-JFK          Month  4  | total=  10  [Boeing 787-9:10]
+    DXB-JFK          Month  5  | total=   3  [Boeing 787-9:3]
+    DXB-JFK          Month  6  | total=  11  [Boeing 787-9:11]
+    DXB-JFK          Month  7  | total=  10  [Boeing 787-9:10]
+    DXB-JFK          Month  8  | total=   7  [Boeing 787-9:7]
+    DXB-KUL          Month  1  | total=   7  [Airbus A350-900:7]
+    DXB-KUL          Month  2  | total=   8  [Airbus A350-900:8]
+    DXB-KUL          Month  3  | total=   8  [Airbus A350-900:8]
+    DXB-KUL          Month  4  | total=   9  [Airbus A350-900:9]
+    DXB-KUL          Month  5  | total=  12  [Airbus A350-900:12]
+    DXB-KUL          Month  6  | total=   8  [Airbus A350-900:8]
+    DXB-KUL          Month  7  | total=  11  [Airbus A350-900:11]
+    DXB-KUL          Month  8  | total=  10  [Airbus A350-900:10]
+    DXB-KWI          Month  1  | total=  29  [Boeing 737-800:17  Airbus A320:12]
+    DXB-KWI          Month  2  | total=  29  [Airbus A320:14  Boeing 737-800:15]
+    DXB-LHR          Month  1  | total=  12  [Boeing 787-9:12]
+    DXB-MCT          Month  1  | total=  29  [Airbus A320:13  Boeing 737-800:16]
+    DXB-MCT          Month  2  | total=  28  [Airbus A320:15  Boeing 737-800:13]
+    DXB-MCT          Month  3  | total=  26  [Boeing 737-800:17  Airbus A320:9]
+    DXB-MCT          Month  4  | total=  26  [Airbus A320:10  Boeing 737-800:16]
+    DXB-MCT          Month  5  | total=  29  [Airbus A320:12  Boeing 737-800:17]
+    DXB-MCT          Month  6  | total=  11  [Boeing 737-800:11]
+    DXB-MCT          Month  7  | total=   3  [Airbus A320:3]
+    DXB-MCT          Month  8  | total=  14  [Airbus A320:14]
+    DXB-MEL          Month  1  | total=   8  [Airbus A350-900:8]
+    DXB-MEL          Month  2  | total=  10  [Airbus A350-900:10]
+    DXB-MEL          Month  3  | total=  11  [Airbus A350-900:11]
+    DXB-MEL          Month  4  | total=  11  [Airbus A350-900:11]
+    DXB-MEL          Month  5  | total=   7  [Airbus A350-900:7]
+    DXB-MEL          Month  6  | total=   7  [Airbus A350-900:7]
+    DXB-ORD          Month  1  | total=  11  [Airbus A350-900:11]
+    DXB-ORD          Month  2  | total=  10  [Airbus A350-900:10]
+    DXB-ORD          Month  3  | total=  12  [Airbus A350-900:12]
+    DXB-ORD          Month  4  | total=   8  [Airbus A350-900:8]
+    DXB-SIN          Month  1  | total=  15  [Boeing 787-9:15]
+    DXB-SIN          Month  2  | total=  10  [Boeing 787-9:10]
+    DXB-SIN          Month  3  | total=  11  [Boeing 787-9:11]
+    DXB-SIN          Month  4  | total=   5  [Boeing 787-9:5]
+    DXB-SIN          Month  5  | total=  11  [Boeing 787-9:11]
+    DXB-SIN          Month  6  | total=   8  [Boeing 787-9:8]
+    DXB-SIN          Month  7  | total=   9  [Boeing 787-9:9]
+    DXB-SIN          Month  8  | total=  10  [Boeing 787-9:10]
+    DXB-SYD          Month  1  | total=   8  [Boeing 787-9:8]
+    DXB-SYD          Month  2  | total=   5  [Boeing 787-9:5]
+    DXB-SYD          Month  3  | total=   4  [Boeing 787-9:4]
+    DXB-SYD          Month  4  | total=   2  [Boeing 787-9:2]
+    DXB-SYD          Month  5  | total=  11  [Boeing 787-9:11]
+    DXB-SYD          Month  6  | total=   5  [Boeing 787-9:5]
+    DXB-SYD          Month  7  | total=   6  [Boeing 787-9:6]
+    DXB-SYD          Month  8  | total=   8  [Boeing 787-9:8]
+
+  Aircraft deployments (u=1):
+    Airbus A320           ->  M1(W=53), M2(W=66), M3(W=33), M4(W=36), M5(W=28), M7(W=3), M8(W=14)
+    Airbus A350-900       ->  M1(W=71), M2(W=68), M3(W=63), M4(W=65), M5(W=49), M6(W=47), M7(W=35), M8(W=51)
+    Boeing 737-800        ->  M1(W=64), M2(W=49), M3(W=46), M4(W=30), M5(W=48), M6(W=11)
+    Boeing 787-9          ->  M1(W=101), M2(W=77), M3(W=74), M4(W=68), M5(W=78), M6(W=74), M7(W=78), M8(W=72)
+
+
+########################################################################
+# STEP 9 — LARGE BASELINE  (16 routes, 12 months, 6 aircraft)
+# This is the largest instance solvable within the restricted
+# Gurobi license limit.
+# For the full 30-route dataset: obtain a full Gurobi academic
+# license and set RUN_FULL_DATASET = True.
+########################################################################
+=======================================================
+DATA SUMMARY
+=======================================================
+  Routes   : 16
+  Periods  : 12 months [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  Aircraft : 6
+  (r,t,a) combos : 504
+
+  Category breakdown:
+    Long Haul: 6 routes
+    Medium Haul: 4 routes
+    Short Haul: 6 routes
+=======================================================
+Set parameter Username
+Set parameter LicenseID to value 2782186
+Academic license - for non-commercial use only - expires 2027-02-23
+Set parameter TimeLimit to value 300
+Set parameter MIPGap to value 0.01
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 155H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 22 logical processors, using up to 22 threads
+
+Non-default parameters:
+TimeLimit  300
+MIPGap  0.01
+
+Optimize a model with 1742 rows, 1000 columns and 5484 nonzeros (Max)
+Model fingerprint: 0xad271f35
+Model has 504 linear objective coefficients
+Variable types: 0 continuous, 1000 integer (424 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 3e+02]
+  Objective range  [2e+01, 6e+05]
+  Bounds range     [1e+00, 1e+02]
+  RHS range        [1e+00, 2e+03]
+
+Found heuristic solution: objective 1.045344e+07
+Presolve removed 1306 rows and 505 columns
+Presolve time: 0.01s
+Presolved: 436 rows, 495 columns, 1573 nonzeros
+Found heuristic solution: objective 1.919572e+08
+Variable types: 0 continuous, 495 integer (126 binary)
+Found heuristic solution: objective 2.171495e+08
+
+Root relaxation: objective 5.014350e+08, 144 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 5.0143e+08    0   49 2.1715e+08 5.0143e+08   131%     -    0s
+H    0     0                    4.015619e+08 5.0143e+08  24.9%     -    0s
+H    0     0                    4.036389e+08 5.0143e+08  24.2%     -    0s
+H    0     0                    4.037003e+08 5.0143e+08  24.2%     -    0s
+H    0     0                    4.211579e+08 5.0143e+08  19.1%     -    0s
+H    0     0                    4.386702e+08 5.0143e+08  14.3%     -    0s
+H    0     0                    4.388176e+08 5.0143e+08  14.3%     -    0s
+H    0     0                    4.391588e+08 5.0143e+08  14.2%     -    0s
+H    0     0                    4.392202e+08 5.0143e+08  14.2%     -    0s
+H    0     0                    4.412523e+08 5.0143e+08  13.6%     -    0s
+H    0     0                    4.417364e+08 5.0143e+08  13.5%     -    0s
+H    0     0                    4.500931e+08 5.0143e+08  11.4%     -    0s
+H    0     0                    4.598545e+08 5.0143e+08  9.04%     -    0s
+     0     0 4.9329e+08    0   37 4.5985e+08 4.9329e+08  7.27%     -    0s
+H    0     0                    4.760632e+08 4.9327e+08  3.62%     -    0s
+H    0     0                    4.766295e+08 4.9327e+08  3.49%     -    0s
+H    0     0                    4.777941e+08 4.9327e+08  3.24%     -    0s
+H    0     0                    4.925320e+08 4.9327e+08  0.15%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  Implied bound: 130
+  MIR: 7
+  StrongCG: 1
+  Flow cover: 7
+  Zero half: 1
+  RLT: 7
+  Relax-and-lift: 7
+
+Explored 1 nodes (225 simplex iterations) in 0.05 seconds (0.02 work units)
+Thread count was 22 (of 22 available processors)
+
+Solution count 10: 4.92532e+08 4.77794e+08 4.7663e+08 ... 4.39159e+08
+
+Optimal solution found (tolerance 1.00e-02)
+Best objective 4.925320113400e+08, best bound 4.932741324559e+08, gap 0.1507%
+
+========================================================================
+  Large — Baseline (16r × 12m × 6a)
+  delta=0.00 | alpha=1.00 | N_min=2 | N_maint=2 | gamma=0.20
+========================================================================
+  Status      : OPTIMAL
+  Runtime     : 0.059 s
+  Variables   : 1000  |  Constraints: 1742
+  Objective   : $      492,532,011.34  (USD)
+
+  Active route-periods : 147
+    DXB-BAH          Month  1  | total=  29  [Airbus A320:16  Boeing 737-800:13]
+    DXB-BAH          Month  2  | total=  30  [Airbus A320:19  Boeing 737-800:11]
+    DXB-BAH          Month  3  | total=  25  [Airbus A320:14  Boeing 737-800:11]
+    DXB-BAH          Month  4  | total=  29  [Airbus A320:15  Boeing 737-800:14]
+    DXB-BAH          Month  5  | total=  29  [Airbus A320:16  Boeing 737-800:13]
+    DXB-BAH          Month  9  | total=  13  [Airbus A320:13] [NEW]
+    DXB-BAH          Month 10  | total=  29  [Airbus A320:11  Boeing 737-800:18]
+    DXB-BAH          Month 11  | total=  26  [Airbus A320:12  Boeing 737-800:14]
+    DXB-BAH          Month 12  | total=  26  [Airbus A320:9  Boeing 737-800:17]
+    DXB-BOM          Month  1  | total=  29  [Boeing 787-9:8  Boeing 777-300ER:15  Airbus A350-900:6]
+    DXB-BOM          Month  2  | total=  27  [Airbus A350-900:12  Boeing 777-300ER:8  Boeing 787-9:7]
+    DXB-BOM          Month  3  | total=  28  [Airbus A350-900:6  Boeing 787-9:11  Boeing 777-300ER:11]
+    DXB-BOM          Month  4  | total=  28  [Boeing 787-9:9  Boeing 777-300ER:11  Airbus A350-900:8]
+    DXB-BOM          Month  5  | total=  26  [Airbus A350-900:12  Boeing 787-9:8  Boeing 777-300ER:6]
+    DXB-BOM          Month  6  | total=  29  [Boeing 787-9:10  Boeing 777-300ER:9  Airbus A350-900:10]
+    DXB-BOM          Month  7  | total=  25  [Airbus A350-900:8  Boeing 777-300ER:7  Boeing 787-9:10]
+    DXB-BOM          Month  8  | total=  29  [Airbus A350-900:8  Boeing 787-9:9  Boeing 777-300ER:12]
+    DXB-BOM          Month  9  | total=  27  [Boeing 787-9:11  Boeing 777-300ER:9  Airbus A350-900:7]
+    DXB-BOM          Month 10  | total=  26  [Airbus A350-900:6  Boeing 787-9:7  Boeing 777-300ER:13]
+    DXB-BOM          Month 11  | total=  25  [Airbus A350-900:12  Boeing 777-300ER:2  Boeing 787-9:11]
+    DXB-BOM          Month 12  | total=  25  [Boeing 787-9:6  Boeing 777-300ER:11  Airbus A350-900:8]
+    DXB-CDG          Month  1  | total=  26  [Boeing 787-9:7  Airbus A380:10  Boeing 777-300ER:9]
+    DXB-CDG          Month  2  | total=  28  [Airbus A380:8  Boeing 777-300ER:9  Boeing 787-9:11]
+    DXB-CDG          Month  3  | total=  26  [Airbus A380:8  Boeing 777-300ER:7  Boeing 787-9:11]
+    DXB-CDG          Month  4  | total=  28  [Boeing 787-9:9  Airbus A380:10  Boeing 777-300ER:9]
+    DXB-CDG          Month  5  | total=  27  [Airbus A380:9  Boeing 777-300ER:8  Boeing 787-9:10]
+    DXB-CDG          Month  6  | total=  28  [Airbus A380:11  Boeing 777-300ER:9  Boeing 787-9:8]
+    DXB-CDG          Month  7  | total=  25  [Boeing 777-300ER:5  Boeing 787-9:10  Airbus A380:10]
+    DXB-CDG          Month  8  | total=  25  [Airbus A380:7  Boeing 777-300ER:6  Boeing 787-9:12]
+    DXB-CDG          Month  9  | total=  27  [Boeing 787-9:8  Airbus A380:9  Boeing 777-300ER:10]
+    DXB-CDG          Month 10  | total=  25  [Airbus A380:10  Boeing 777-300ER:9  Boeing 787-9:6]
+    DXB-CDG          Month 11  | total=  28  [Airbus A380:7  Boeing 777-300ER:10  Boeing 787-9:11]
+    DXB-CDG          Month 12  | total=  30  [Boeing 787-9:9  Airbus A380:10  Boeing 777-300ER:11]
+    DXB-DEL          Month  1  | total=  30  [Boeing 787-9:8  Boeing 777-300ER:5  Airbus A350-900:17]
+    DXB-DEL          Month  2  | total=  28  [Airbus A350-900:12  Boeing 787-9:11  Boeing 777-300ER:5]
+    DXB-DEL          Month  3  | total=  25  [Boeing 787-9:6  Boeing 777-300ER:11  Airbus A350-900:8]
+    DXB-DEL          Month  4  | total=  27  [Airbus A350-900:11  Boeing 787-9:7  Boeing 777-300ER:9]
+    DXB-DEL          Month  5  | total=  25  [Airbus A350-900:3  Boeing 787-9:8  Boeing 777-300ER:14]
+    DXB-DEL          Month  6  | total=  27  [Boeing 787-9:7  Boeing 777-300ER:9  Airbus A350-900:11]
+    DXB-DEL          Month  7  | total=  27  [Airbus A350-900:9  Boeing 777-300ER:9  Boeing 787-9:9]
+    DXB-DEL          Month  8  | total=  25  [Airbus A350-900:11  Boeing 787-9:8  Boeing 777-300ER:6]
+    DXB-DEL          Month  9  | total=  29  [Boeing 787-9:10  Boeing 777-300ER:5  Airbus A350-900:14]
+    DXB-DEL          Month 10  | total=  30  [Airbus A350-900:12  Boeing 787-9:11  Boeing 777-300ER:7]
+    DXB-DEL          Month 11  | total=  29  [Boeing 787-9:10  Boeing 777-300ER:13  Airbus A350-900:6]
+    DXB-DEL          Month 12  | total=  30  [Airbus A350-900:16  Boeing 777-300ER:7  Boeing 787-9:7]
+    DXB-DOH          Month  1  | total=  30  [Airbus A320:12  Boeing 737-800:18]
+    DXB-DOH          Month  2  | total=  28  [Airbus A320:18  Boeing 737-800:10]
+    DXB-DOH          Month  3  | total=  28  [Airbus A320:10  Boeing 737-800:18]
+    DXB-DOH          Month  4  | total=  11  [Airbus A320:11]
+    DXB-DOH          Month  5  | total=  18  [Boeing 737-800:18]
+    DXB-DOH          Month  9  | total=   9  [Airbus A320:9] [NEW]
+    DXB-DOH          Month 10  | total=  27  [Airbus A320:15  Boeing 737-800:12]
+    DXB-DOH          Month 11  | total=  29  [Airbus A320:13  Boeing 737-800:16]
+    DXB-DOH          Month 12  | total=  30  [Airbus A320:13  Boeing 737-800:17]
+    DXB-FRA          Month  1  | total=  25  [Airbus A380:3  Boeing 787-9:15  Boeing 777-300ER:7]
+    DXB-FRA          Month  2  | total=  28  [Boeing 777-300ER:9  Airbus A380:12  Boeing 787-9:7]
+    DXB-FRA          Month  3  | total=  29  [Boeing 777-300ER:9  Boeing 787-9:11  Airbus A380:9]
+    DXB-FRA          Month  4  | total=  27  [Airbus A380:7  Boeing 787-9:7  Boeing 777-300ER:13]
+    DXB-FRA          Month  5  | total=  27  [Boeing 787-9:11  Boeing 777-300ER:10  Airbus A380:6]
+    DXB-FRA          Month  6  | total=  27  [Airbus A380:11  Boeing 787-9:6  Boeing 777-300ER:10]
+    DXB-FRA          Month  7  | total=  28  [Airbus A380:8  Boeing 787-9:14  Boeing 777-300ER:6]
+    DXB-FRA          Month  8  | total=  27  [Boeing 777-300ER:8  Boeing 787-9:7  Airbus A380:12]
+    DXB-FRA          Month  9  | total=  28  [Airbus A380:9  Boeing 787-9:16  Boeing 777-300ER:3]
+    DXB-FRA          Month 10  | total=  28  [Airbus A380:9  Boeing 787-9:9  Boeing 777-300ER:10]
+    DXB-FRA          Month 11  | total=  26  [Boeing 787-9:8  Boeing 777-300ER:5  Airbus A380:13]
+    DXB-FRA          Month 12  | total=  25  [Airbus A380:7  Boeing 777-300ER:8  Boeing 787-9:10]
+    DXB-HKG          Month  1  | total=  29  [Boeing 777-300ER:6  Boeing 787-9:11  Airbus A380:12]
+    DXB-HKG          Month  2  | total=  27  [Airbus A380:6  Boeing 777-300ER:13  Boeing 787-9:8]
+    DXB-HKG          Month  3  | total=  27  [Airbus A380:10  Boeing 777-300ER:7  Boeing 787-9:10]
+    DXB-HKG          Month  4  | total=  29  [Airbus A380:10  Boeing 777-300ER:11  Boeing 787-9:8]
+    DXB-HKG          Month  5  | total=  27  [Airbus A380:13  Boeing 777-300ER:8  Boeing 787-9:6]
+    DXB-HKG          Month  6  | total=  27  [Boeing 787-9:6  Airbus A380:12  Boeing 777-300ER:9]
+    DXB-HKG          Month  7  | total=  25  [Airbus A380:9  Boeing 777-300ER:8  Boeing 787-9:8]
+    DXB-HKG          Month  8  | total=  30  [Airbus A380:10  Boeing 777-300ER:10  Boeing 787-9:10]
+    DXB-HKG          Month  9  | total=  25  [Boeing 777-300ER:7  Boeing 787-9:7  Airbus A380:11]
+    DXB-HKG          Month 10  | total=  27  [Airbus A380:9  Boeing 777-300ER:10  Boeing 787-9:8]
+    DXB-HKG          Month 11  | total=  30  [Boeing 787-9:9  Airbus A380:16  Boeing 777-300ER:5]
+    DXB-HKG          Month 12  | total=  29  [Boeing 787-9:11  Boeing 777-300ER:8  Airbus A380:10]
+    DXB-IST          Month  1  | total=  29  [Airbus A350-900:14  Boeing 777-300ER:9  Boeing 787-9:6]
+    DXB-IST          Month  2  | total=  26  [Boeing 787-9:10  Airbus A350-900:10  Boeing 777-300ER:6]
+    DXB-IST          Month  3  | total=  15  [Boeing 777-300ER:8  Airbus A350-900:7]
+    DXB-IST          Month  4  | total=  23  [Airbus A350-900:7  Boeing 777-300ER:9  Boeing 787-9:7]
+    DXB-IST          Month  5  | total=  27  [Boeing 787-9:10  Airbus A350-900:8  Boeing 777-300ER:9]
+    DXB-IST          Month  6  | total=  25  [Boeing 777-300ER:6  Boeing 787-9:13  Airbus A350-900:6]
+    DXB-IST          Month  7  | total=  15  [Boeing 777-300ER:15]
+    DXB-IST          Month  8  | total=  23  [Boeing 777-300ER:9  Boeing 787-9:1  Airbus A350-900:13]
+    DXB-IST          Month  9  | total=  27  [Boeing 777-300ER:6  Boeing 787-9:12  Airbus A350-900:9]
+    DXB-IST          Month 10  | total=  30  [Boeing 787-9:6  Airbus A350-900:12  Boeing 777-300ER:12]
+    DXB-IST          Month 11  | total=  25  [Boeing 777-300ER:12  Boeing 787-9:6  Airbus A350-900:7]
+    DXB-IST          Month 12  | total=  30  [Airbus A350-900:7  Boeing 777-300ER:10  Boeing 787-9:13]
+    DXB-JFK          Month  1  | total=  28  [Airbus A380:8  Boeing 777-300ER:9  Boeing 787-9:11]
+    DXB-JFK          Month  2  | total=  23  [Boeing 777-300ER:12  Boeing 787-9:8  Airbus A380:3]
+    DXB-JFK          Month  3  | total=  25  [Airbus A380:7  Boeing 777-300ER:11  Boeing 787-9:7]
+    DXB-JFK          Month  4  | total=  13  [Boeing 787-9:10  Boeing 777-300ER:3]
+    DXB-JFK          Month  5  | total=  15  [Airbus A380:3  Boeing 777-300ER:9  Boeing 787-9:3]
+    DXB-JFK          Month  6  | total=  25  [Airbus A380:3  Boeing 777-300ER:11  Boeing 787-9:11]
+    DXB-JFK          Month  7  | total=  26  [Boeing 787-9:10  Airbus A380:10  Boeing 777-300ER:6]
+    DXB-JFK          Month  8  | total=  18  [Boeing 777-300ER:9  Boeing 787-9:9]
+    DXB-JFK          Month  9  | total=  17  [Airbus A380:3  Boeing 777-300ER:5  Boeing 787-9:9]
+    DXB-JFK          Month 10  | total=  21  [Boeing 777-300ER:7  Boeing 787-9:10  Airbus A380:4]
+    DXB-JFK          Month 11  | total=  26  [Airbus A380:9  Boeing 777-300ER:9  Boeing 787-9:8]
+    DXB-JFK          Month 12  | total=  11  [Boeing 787-9:3  Boeing 777-300ER:8]
+    DXB-KWI          Month  1  | total=  29  [Airbus A320:12  Boeing 737-800:17]
+    DXB-KWI          Month  2  | total=  29  [Airbus A320:14  Boeing 737-800:15]
+    DXB-KWI          Month 10  | total=  29  [Airbus A320:16  Boeing 737-800:13] [NEW]
+    DXB-KWI          Month 11  | total=   3  [Boeing 737-800:3]
+    DXB-KWI          Month 12  | total=  28  [Airbus A320:14  Boeing 737-800:14]
+    DXB-LHR          Month  1  | total=  12  [Boeing 787-9:12]
+    DXB-LHR          Month 10  | total=  10  [Boeing 777-300ER:10] [NEW]
+    DXB-LHR          Month 11  | total=   7  [Boeing 777-300ER:7]
+    DXB-LHR          Month 12  | total=  10  [Boeing 777-300ER:10]
+    DXB-MCT          Month  1  | total=  29  [Airbus A320:13  Boeing 737-800:16]
+    DXB-MCT          Month  2  | total=  28  [Airbus A320:15  Boeing 737-800:13]
+    DXB-MCT          Month  3  | total=  26  [Boeing 737-800:17  Airbus A320:9]
+    DXB-MCT          Month  4  | total=  26  [Airbus A320:10  Boeing 737-800:16]
+    DXB-MCT          Month  5  | total=  29  [Airbus A320:12  Boeing 737-800:17]
+    DXB-MCT          Month  6  | total=  11  [Boeing 737-800:11]
+    DXB-MCT          Month  7  | total=   3  [Airbus A320:3]
+    DXB-MCT          Month  8  | total=  14  [Airbus A320:14]
+    DXB-MCT          Month  9  | total=  26  [Airbus A320:11  Boeing 737-800:15]
+    DXB-MCT          Month 10  | total=  27  [Airbus A320:14  Boeing 737-800:13]
+    DXB-MCT          Month 11  | total=  29  [Airbus A320:17  Boeing 737-800:12]
+    DXB-MCT          Month 12  | total=  27  [Airbus A320:15  Boeing 737-800:12]
+    DXB-SIN          Month  1  | total=  28  [Airbus A380:7  Boeing 777-300ER:6  Boeing 787-9:15]
+    DXB-SIN          Month  2  | total=  25  [Boeing 787-9:10  Airbus A380:6  Boeing 777-300ER:9]
+    DXB-SIN          Month  3  | total=  28  [Boeing 777-300ER:10  Boeing 787-9:11  Airbus A380:7]
+    DXB-SIN          Month  4  | total=  25  [Airbus A380:12  Boeing 777-300ER:8  Boeing 787-9:5]
+    DXB-SIN          Month  5  | total=  30  [Boeing 777-300ER:7  Boeing 787-9:11  Airbus A380:12]
+    DXB-SIN          Month  6  | total=  28  [Airbus A380:7  Boeing 777-300ER:13  Boeing 787-9:8]
+    DXB-SIN          Month  7  | total=  25  [Boeing 787-9:9  Airbus A380:10  Boeing 777-300ER:6]
+    DXB-SIN          Month  8  | total=  29  [Boeing 777-300ER:8  Boeing 787-9:10  Airbus A380:11]
+    DXB-SIN          Month  9  | total=  26  [Airbus A380:13  Boeing 777-300ER:6  Boeing 787-9:7]
+    DXB-SIN          Month 10  | total=  25  [Boeing 787-9:7  Airbus A380:12  Boeing 777-300ER:6]
+    DXB-SIN          Month 11  | total=  25  [Airbus A380:7  Boeing 777-300ER:10  Boeing 787-9:8]
+    DXB-SIN          Month 12  | total=  26  [Airbus A380:7  Boeing 777-300ER:13  Boeing 787-9:6]
+    DXB-SYD          Month  1  | total=  25  [Airbus A380:3  Boeing 787-9:8  Boeing 777-300ER:14]
+    DXB-SYD          Month  2  | total=  29  [Airbus A380:13  Boeing 777-300ER:11  Boeing 787-9:5]
+    DXB-SYD          Month  3  | total=  13  [Boeing 777-300ER:8  Boeing 787-9:5]
+    DXB-SYD          Month  4  | total=  22  [Boeing 777-300ER:13  Boeing 787-9:4  Airbus A380:5]
+    DXB-SYD          Month  5  | total=  18  [Boeing 777-300ER:7  Boeing 787-9:11]
+    DXB-SYD          Month  6  | total=   5  [Boeing 787-9:5]
+    DXB-SYD          Month  7  | total=   8  [Boeing 777-300ER:2  Boeing 787-9:6]
+    DXB-SYD          Month  8  | total=   6  [Boeing 787-9:6]
+    DXB-SYD          Month  9  | total=  15  [Boeing 777-300ER:7  Boeing 787-9:8]
+    DXB-SYD          Month 10  | total=  15  [Boeing 777-300ER:11  Boeing 787-9:4]
+    DXB-SYD          Month 11  | total=  17  [Boeing 787-9:6  Boeing 777-300ER:11]
+    DXB-SYD          Month 12  | total=  26  [Boeing 787-9:9  Airbus A380:9  Boeing 777-300ER:8]
+
+  Route openings : 4
+    DXB-BAH  opened Month 9
+    DXB-DOH  opened Month 9
+    DXB-KWI  opened Month 10
+    DXB-LHR  opened Month 10
+
+  Aircraft deployments (u=1):
+    Airbus A320           ->  M1(W=53), M2(W=66), M3(W=33), M4(W=36), M5(W=28), M7(W=3), M8(W=14), M9(W=33), M10(W=56), M11(W=42), M12(W=51)
+    Airbus A350-900       ->  M1(W=37), M2(W=34), M3(W=21), M4(W=26), M5(W=23), M6(W=27), M7(W=17), M8(W=32), M9(W=30), M10(W=30), M11(W=25), M12(W=31)
+    Airbus A380           ->  M1(W=43), M2(W=48), M3(W=41), M4(W=44), M5(W=43), M6(W=44), M7(W=47), M8(W=40), M9(W=45), M10(W=44), M11(W=52), M12(W=43)
+    Boeing 737-800        ->  M1(W=64), M2(W=49), M3(W=46), M4(W=30), M5(W=48), M6(W=11), M9(W=15), M10(W=56), M11(W=45), M12(W=60)
+    Boeing 777-300ER      ->  M1(W=80), M2(W=82), M3(W=82), M4(W=86), M5(W=78), M6(W=76), M7(W=64), M8(W=68), M9(W=58), M10(W=95), M11(W=84), M12(W=94)
+    Boeing 787-9          ->  M1(W=101), M2(W=77), M3(W=72), M4(W=66), M5(W=78), M6(W=74), M7(W=76), M8(W=72), M9(W=88), M10(W=68), M11(W=77), M12(W=74)
+
+
+########################################################################
+# STEP 10 — LARGE FUEL-SHOCK  (delta ∈ {0, 0.10, 0.25})
+########################################################################
+  delta=0.00  neg-pi=118  ->  $492,532,011.34
+  delta=0.10  neg-pi=124  ->  $476,064,794.23
+  delta=0.25  neg-pi=132  ->  $451,810,631.90
+
+====================================================================================================
+  SCENARIO TABLE  [Fuel-shock — Large]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     2    2   0.20   118     OPTIMAL  $      492,532,011.34   147     4    69   0.028s
+   0.10   1.00     2    2   0.20   124     OPTIMAL  $      476,064,794.23   144     3    69   0.026s
+   0.25   1.00     2    2   0.20   132     OPTIMAL  $      451,810,631.90   143     5    69   0.030s
+====================================================================================================
+
+########################################################################
+# STEP 11 — LARGE MAINTENANCE INTENSITY  (gamma ∈ {0.0, 0.20, 0.40})
+# 12-month horizon makes maintenance capacity reduction visible.
+########################################################################
+  gamma=0.00  ->  $510,633,688.24
+  gamma=0.20  ->  $492,532,011.34
+  gamma=0.40  ->  $378,414,046.95
+
+====================================================================================================
+  SCENARIO TABLE  [Maintenance intensity — Large]
+====================================================================================================
+  delta  alpha  Nmin   Nm  gamma   neg      Status         Objective (USD)   Rts  Open   u=1     Time
+  --------------------------------------------------------------------------------------------------
+   0.00   1.00     2    2   0.00   118     OPTIMAL  $      510,633,688.24   150     4    69   0.010s
+   0.00   1.00     2    2   0.20   118     OPTIMAL  $      492,532,011.34   147     4    69   0.026s
+   0.00   1.00     2    2   0.40   118     OPTIMAL  $      378,414,046.95   136    10    62   0.166s
+====================================================================================================
+
+########################################################################
+# STEP 12 — FULL DATASET BASELINE  (30 routes, 12 months, 6 aircraft)
+# This scenario uses the full available route set.
+# It may exceed the restricted Gurobi license limit.
+########################################################################
+=======================================================
+DATA SUMMARY
+=======================================================
+  Routes   : 30
+  Periods  : 12 months [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+  Aircraft : 6
+  (r,t,a) combos : 840
+
+  Category breakdown:
+    Long Haul: 12 routes
+    Medium Haul: 10 routes
+    Short Haul: 8 routes
+=======================================================
+Set parameter Username
+Set parameter LicenseID to value 2782186
+Academic license - for non-commercial use only - expires 2027-02-23
+Set parameter TimeLimit to value 600
+Set parameter MIPGap to value 0.01
+Gurobi Optimizer version 13.0.1 build v13.0.1rc0 (win64 - Windows 11+.0 (26200.2))
+
+CPU model: Intel(R) Core(TM) Ultra 7 155H, instruction set [SSE2|AVX|AVX2]
+Thread count: 16 physical cores, 22 logical processors, using up to 22 threads
+
+Non-default parameters:
+TimeLimit  600
+MIPGap  0.01
+
+Optimize a model with 2820 rows, 1644 columns and 9236 nonzeros (Max)
+Model fingerprint: 0x50981496
+Model has 840 linear objective coefficients
+Variable types: 0 continuous, 1644 integer (732 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 3e+02]
+  Objective range  [2e+01, 6e+05]
+  Bounds range     [1e+00, 2e+02]
+  RHS range        [1e+00, 2e+03]
+
+Found heuristic solution: objective 4575306.2200
+Presolve removed 1001 rows and 312 columns
+Presolve time: 0.01s
+Presolved: 1819 rows, 1332 columns, 6174 nonzeros
+Variable types: 0 continuous, 1332 integer (433 binary)
+Found heuristic solution: objective 1.509448e+07
+
+Root relaxation: objective 6.217031e+08, 473 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0 6.2170e+08    0   88 1.5094e+07 6.2170e+08  4019%     -    0s
+H    0     0                    5.072145e+08 6.2170e+08  22.6%     -    0s
+H    0     0                    5.090540e+08 6.2170e+08  22.1%     -    0s
+H    0     0                    5.099028e+08 6.2170e+08  21.9%     -    0s
+H    0     0                    5.325367e+08 6.2170e+08  16.7%     -    0s
+H    0     0                    5.392675e+08 6.2170e+08  15.3%     -    0s
+H    0     0                    5.395957e+08 6.2170e+08  15.2%     -    0s
+H    0     0                    5.400798e+08 6.2170e+08  15.1%     -    0s
+     0     0 6.0718e+08    0   73 5.4008e+08 6.0718e+08  12.4%     -    0s
+H    0     0                    5.823109e+08 6.0718e+08  4.27%     -    0s
+H    0     0                    5.832770e+08 6.0718e+08  4.10%     -    0s
+H    0     0                    6.011904e+08 6.0718e+08  1.00%     -    0s
+
+Cutting planes:
+  Gomory: 7
+  Implied bound: 312
+  MIR: 27
+  StrongCG: 4
+  Flow cover: 6
+  Zero half: 2
+  RLT: 15
+  Relax-and-lift: 10
+
+Explored 1 nodes (898 simplex iterations) in 0.08 seconds (0.04 work units)
+Thread count was 22 (of 22 available processors)
+
+Solution count 10: 6.0119e+08 5.83277e+08 5.82311e+08 ... 5.07214e+08
+
+Optimal solution found (tolerance 1.00e-02)
+Best objective 6.011903831900e+08, best bound 6.071817845951e+08, gap 0.9966%
+
+========================================================================
+  Full Dataset — Baseline (30r × 12m × 6a)
+  delta=0.00 | alpha=1.00 | N_min=2 | N_maint=2 | gamma=0.20
+========================================================================
+  Status      : OPTIMAL
+  Runtime     : 0.090 s
+  Variables   : 1644  |  Constraints: 2820
+  Objective   : $      601,190,383.19  (USD)
+
+  Active route-periods : 249
+    DXB-BAH          Month  1  | total=  29  [Airbus A320:16  Boeing 737-800:13]
+    DXB-BAH          Month  2  | total=  30  [Airbus A320:19  Boeing 737-800:11]
+    DXB-BAH          Month  3  | total=  25  [Airbus A320:14  Boeing 737-800:11]
+    DXB-BAH          Month  4  | total=  29  [Airbus A320:15  Boeing 737-800:14]
+    DXB-BAH          Month  5  | total=  29  [Airbus A320:16  Boeing 737-800:13]
+    DXB-BAH          Month  9  | total=  13  [Airbus A320:13] [NEW]
+    DXB-BAH          Month 10  | total=  29  [Airbus A320:11  Boeing 737-800:18]
+    DXB-BAH          Month 11  | total=  26  [Airbus A320:12  Boeing 737-800:14]
+    DXB-BAH          Month 12  | total=  26  [Airbus A320:9  Boeing 737-800:17]
+    DXB-BKK          Month  1  | total=  20  [Boeing 777-300ER:12  Airbus A350-900:8]
+    DXB-BKK          Month  2  | total=  16  [Airbus A350-900:6  Boeing 777-300ER:10]
+    DXB-BKK          Month  3  | total=  17  [Airbus A350-900:11  Boeing 777-300ER:6]
+    DXB-BKK          Month  4  | total=  17  [Boeing 777-300ER:6  Airbus A350-900:11]
+    DXB-BKK          Month  5  | total=  20  [Airbus A350-900:7  Boeing 777-300ER:13]
+    DXB-BKK          Month  6  | total=  15  [Airbus A350-900:5  Boeing 777-300ER:10]
+    DXB-BKK          Month  7  | total=  19  [Boeing 777-300ER:12  Airbus A350-900:7]
+    DXB-BKK          Month  8  | total=  16  [Airbus A350-900:9  Boeing 777-300ER:7]
+    DXB-BKK          Month  9  | total=  20  [Boeing 777-300ER:9  Airbus A350-900:11]
+    DXB-BKK          Month 10  | total=  19  [Boeing 777-300ER:6  Airbus A350-900:13]
+    DXB-BKK          Month 11  | total=  16  [Airbus A350-900:8  Boeing 777-300ER:8]
+    DXB-BKK          Month 12  | total=  17  [Boeing 777-300ER:8  Airbus A350-900:9]
+    DXB-BLR          Month  1  | total=  15  [Boeing 787-9:7  Airbus A350-900:8]
+    DXB-BLR          Month  2  | total=   7  [Boeing 787-9:4  Airbus A350-900:3]
+    DXB-BLR          Month  3  | total=  15  [Airbus A350-900:15]
+    DXB-BLR          Month  5  | total=  13  [Airbus A350-900:13] [NEW]
+    DXB-BLR          Month  6  | total=   1  [Boeing 787-9:1]
+    DXB-BLR          Month  7  | total=  17  [Airbus A350-900:10  Boeing 787-9:7]
+    DXB-BLR          Month 10  | total=   8  [Airbus A350-900:2  Boeing 787-9:6] [NEW]
+    DXB-BLR          Month 11  | total=   1  [Boeing 787-9:1]
+    DXB-BLR          Month 12  | total=   7  [Airbus A350-900:7]
+    DXB-BOM          Month  1  | total=  29  [Boeing 787-9:8  Boeing 777-300ER:15  Airbus A350-900:6]
+    DXB-BOM          Month  2  | total=  27  [Airbus A350-900:12  Boeing 777-300ER:8  Boeing 787-9:7]
+    DXB-BOM          Month  3  | total=  29  [Airbus A350-900:6  Boeing 787-9:12  Boeing 777-300ER:11]
+    DXB-BOM          Month  4  | total=  28  [Boeing 787-9:9  Boeing 777-300ER:11  Airbus A350-900:8]
+    DXB-BOM          Month  5  | total=  26  [Airbus A350-900:12  Boeing 787-9:8  Boeing 777-300ER:6]
+    DXB-BOM          Month  6  | total=  29  [Boeing 787-9:10  Boeing 777-300ER:9  Airbus A350-900:10]
+    DXB-BOM          Month  7  | total=  25  [Airbus A350-900:8  Boeing 777-300ER:7  Boeing 787-9:10]
+    DXB-BOM          Month  8  | total=  20  [Airbus A350-900:8  Boeing 777-300ER:12]
+    DXB-BOM          Month  9  | total=  27  [Boeing 787-9:11  Boeing 777-300ER:9  Airbus A350-900:7]
+    DXB-BOM          Month 10  | total=  26  [Airbus A350-900:6  Boeing 787-9:7  Boeing 777-300ER:13]
+    DXB-BOM          Month 11  | total=  25  [Airbus A350-900:12  Boeing 777-300ER:2  Boeing 787-9:11]
+    DXB-BOM          Month 12  | total=  25  [Boeing 787-9:6  Boeing 777-300ER:11  Airbus A350-900:8]
+    DXB-CDG          Month  1  | total=  26  [Boeing 787-9:7  Airbus A380:10  Boeing 777-300ER:9]
+    DXB-CDG          Month  2  | total=  28  [Airbus A380:8  Boeing 777-300ER:9  Boeing 787-9:11]
+    DXB-CDG          Month  3  | total=  26  [Airbus A380:8  Boeing 777-300ER:7  Boeing 787-9:11]
+    DXB-CDG          Month  4  | total=  28  [Boeing 787-9:9  Airbus A380:10  Boeing 777-300ER:9]
+    DXB-CDG          Month  5  | total=  27  [Airbus A380:9  Boeing 777-300ER:8  Boeing 787-9:10]
+    DXB-CDG          Month  6  | total=  28  [Airbus A380:11  Boeing 777-300ER:9  Boeing 787-9:8]
+    DXB-CDG          Month  7  | total=  25  [Boeing 777-300ER:5  Boeing 787-9:10  Airbus A380:10]
+    DXB-CDG          Month  8  | total=  13  [Airbus A380:7  Boeing 777-300ER:6]
+    DXB-CDG          Month  9  | total=  27  [Boeing 787-9:8  Airbus A380:9  Boeing 777-300ER:10]
+    DXB-CDG          Month 10  | total=  25  [Airbus A380:10  Boeing 777-300ER:9  Boeing 787-9:6]
+    DXB-CDG          Month 11  | total=  28  [Airbus A380:7  Boeing 777-300ER:10  Boeing 787-9:11]
+    DXB-CDG          Month 12  | total=  30  [Boeing 787-9:9  Airbus A380:10  Boeing 777-300ER:11]
+    DXB-CMB          Month  1  | total=  17  [Boeing 787-9:10  Airbus A350-900:7]
+    DXB-CMB          Month  2  | total=  17  [Airbus A350-900:9  Boeing 787-9:8]
+    DXB-CMB          Month  3  | total=   9  [Airbus A350-900:9]
+    DXB-CMB          Month  4  | total=   8  [Airbus A350-900:8]
+    DXB-CMB          Month  5  | total=   9  [Airbus A350-900:9]
+    DXB-CMB          Month  9  | total=  17  [Airbus A350-900:13  Boeing 787-9:4] [NEW]
+    DXB-CMB          Month 10  | total=  20  [Airbus A350-900:10  Boeing 787-9:10]
+    DXB-CMB          Month 11  | total=   8  [Airbus A350-900:8]
+    DXB-CMB          Month 12  | total=   9  [Airbus A350-900:9]
+    DXB-DEL          Month  1  | total=  30  [Boeing 787-9:8  Boeing 777-300ER:5  Airbus A350-900:17]
+    DXB-DEL          Month  2  | total=  28  [Airbus A350-900:12  Boeing 787-9:11  Boeing 777-300ER:5]
+    DXB-DEL          Month  3  | total=  25  [Boeing 787-9:6  Boeing 777-300ER:11  Airbus A350-900:8]
+    DXB-DEL          Month  4  | total=  27  [Airbus A350-900:11  Boeing 787-9:7  Boeing 777-300ER:9]
+    DXB-DEL          Month  5  | total=  25  [Airbus A350-900:3  Boeing 787-9:8  Boeing 777-300ER:14]
+    DXB-DEL          Month  6  | total=  27  [Boeing 787-9:7  Boeing 777-300ER:9  Airbus A350-900:11]
+    DXB-DEL          Month  7  | total=  27  [Airbus A350-900:9  Boeing 777-300ER:9  Boeing 787-9:9]
+    DXB-DEL          Month  8  | total=  17  [Airbus A350-900:11  Boeing 777-300ER:6]
+    DXB-DEL          Month  9  | total=  29  [Boeing 787-9:10  Boeing 777-300ER:5  Airbus A350-900:14]
+    DXB-DEL          Month 10  | total=  30  [Airbus A350-900:12  Boeing 787-9:11  Boeing 777-300ER:7]
+    DXB-DEL          Month 11  | total=  29  [Boeing 787-9:10  Boeing 777-300ER:13  Airbus A350-900:6]
+    DXB-DEL          Month 12  | total=  30  [Airbus A350-900:16  Boeing 777-300ER:7  Boeing 787-9:7]
+    DXB-DOH          Month  1  | total=  30  [Airbus A320:12  Boeing 737-800:18]
+    DXB-DOH          Month  2  | total=  28  [Airbus A320:18  Boeing 737-800:10]
+    DXB-DOH          Month  3  | total=  28  [Airbus A320:10  Boeing 737-800:18]
+    DXB-DOH          Month  4  | total=  11  [Airbus A320:11]
+    DXB-DOH          Month  5  | total=  18  [Boeing 737-800:18]
+    DXB-DOH          Month  9  | total=   9  [Airbus A320:9] [NEW]
+    DXB-DOH          Month 10  | total=  27  [Airbus A320:15  Boeing 737-800:12]
+    DXB-DOH          Month 11  | total=  29  [Airbus A320:13  Boeing 737-800:16]
+    DXB-DOH          Month 12  | total=  30  [Airbus A320:13  Boeing 737-800:17]
+    DXB-FRA          Month  1  | total=  25  [Airbus A380:3  Boeing 787-9:15  Boeing 777-300ER:7]
+    DXB-FRA          Month  2  | total=  28  [Boeing 777-300ER:9  Airbus A380:12  Boeing 787-9:7]
+    DXB-FRA          Month  3  | total=  29  [Boeing 777-300ER:9  Boeing 787-9:11  Airbus A380:9]
+    DXB-FRA          Month  4  | total=  27  [Airbus A380:7  Boeing 787-9:7  Boeing 777-300ER:13]
+    DXB-FRA          Month  5  | total=  27  [Boeing 787-9:11  Boeing 777-300ER:10  Airbus A380:6]
+    DXB-FRA          Month  6  | total=  27  [Airbus A380:11  Boeing 787-9:6  Boeing 777-300ER:10]
+    DXB-FRA          Month  7  | total=  28  [Airbus A380:8  Boeing 787-9:14  Boeing 777-300ER:6]
+    DXB-FRA          Month  8  | total=  20  [Boeing 777-300ER:8  Airbus A380:12]
+    DXB-FRA          Month  9  | total=  28  [Airbus A380:9  Boeing 787-9:16  Boeing 777-300ER:3]
+    DXB-FRA          Month 10  | total=  28  [Airbus A380:9  Boeing 787-9:9  Boeing 777-300ER:10]
+    DXB-FRA          Month 11  | total=  26  [Boeing 787-9:8  Boeing 777-300ER:5  Airbus A380:13]
+    DXB-FRA          Month 12  | total=  25  [Airbus A380:7  Boeing 777-300ER:8  Boeing 787-9:10]
+    DXB-HKG          Month  1  | total=  29  [Boeing 777-300ER:6  Boeing 787-9:11  Airbus A380:12]
+    DXB-HKG          Month  2  | total=  27  [Airbus A380:6  Boeing 777-300ER:13  Boeing 787-9:8]
+    DXB-HKG          Month  3  | total=  27  [Airbus A380:10  Boeing 777-300ER:7  Boeing 787-9:10]
+    DXB-HKG          Month  4  | total=  29  [Airbus A380:10  Boeing 777-300ER:11  Boeing 787-9:8]
+    DXB-HKG          Month  5  | total=  27  [Airbus A380:13  Boeing 777-300ER:8  Boeing 787-9:6]
+    DXB-HKG          Month  6  | total=  27  [Boeing 787-9:6  Airbus A380:12  Boeing 777-300ER:9]
+    DXB-HKG          Month  7  | total=  25  [Airbus A380:9  Boeing 777-300ER:8  Boeing 787-9:8]
+    DXB-HKG          Month  8  | total=  20  [Airbus A380:10  Boeing 777-300ER:10]
+    DXB-HKG          Month  9  | total=  25  [Boeing 777-300ER:7  Boeing 787-9:7  Airbus A380:11]
+    DXB-HKG          Month 10  | total=  27  [Airbus A380:9  Boeing 777-300ER:10  Boeing 787-9:8]
+    DXB-HKG          Month 11  | total=  30  [Boeing 787-9:9  Airbus A380:16  Boeing 777-300ER:5]
+    DXB-HKG          Month 12  | total=  29  [Boeing 787-9:11  Boeing 777-300ER:8  Airbus A380:10]
+    DXB-HYD          Month  1  | total=  20  [Airbus A350-900:12  Boeing 787-9:8]
+    DXB-HYD          Month  2  | total=  19  [Boeing 787-9:6  Airbus A350-900:13]
+    DXB-HYD          Month  3  | total=   6  [Airbus A350-900:6]
+    DXB-HYD          Month  5  | total=   3  [Boeing 787-9:3] [NEW]
+    DXB-HYD          Month  6  | total=   8  [Airbus A350-900:8]
+    DXB-HYD          Month  7  | total=  15  [Boeing 787-9:5  Airbus A350-900:10]
+    DXB-HYD          Month  9  | total=  17  [Airbus A350-900:6  Boeing 787-9:11] [NEW]
+    DXB-HYD          Month 10  | total=  18  [Airbus A350-900:12  Boeing 787-9:6]
+    DXB-HYD          Month 11  | total=   1  [Boeing 787-9:1]
+    DXB-HYD          Month 12  | total=  10  [Airbus A350-900:10]
+    DXB-IST          Month  1  | total=  29  [Airbus A350-900:14  Boeing 777-300ER:9  Boeing 787-9:6]
+    DXB-IST          Month  2  | total=  26  [Boeing 787-9:10  Airbus A350-900:10  Boeing 777-300ER:6]
+    DXB-IST          Month  3  | total=  15  [Boeing 777-300ER:8  Airbus A350-900:7]
+    DXB-IST          Month  4  | total=  16  [Airbus A350-900:7  Boeing 777-300ER:9]
+    DXB-IST          Month  5  | total=  27  [Boeing 787-9:10  Airbus A350-900:8  Boeing 777-300ER:9]
+    DXB-IST          Month  6  | total=  25  [Boeing 777-300ER:6  Boeing 787-9:13  Airbus A350-900:6]
+    DXB-IST          Month  7  | total=  15  [Boeing 777-300ER:15]
+    DXB-IST          Month  8  | total=  22  [Boeing 777-300ER:9  Airbus A350-900:13]
+    DXB-IST          Month  9  | total=  27  [Boeing 777-300ER:6  Boeing 787-9:12  Airbus A350-900:9]
+    DXB-IST          Month 10  | total=  30  [Boeing 787-9:6  Airbus A350-900:12  Boeing 777-300ER:12]
+    DXB-IST          Month 11  | total=  19  [Boeing 777-300ER:12  Airbus A350-900:7]
+    DXB-IST          Month 12  | total=  30  [Airbus A350-900:7  Boeing 777-300ER:10  Boeing 787-9:13]
+    DXB-JFK          Month  1  | total=  28  [Airbus A380:8  Boeing 777-300ER:9  Boeing 787-9:11]
+    DXB-JFK          Month  2  | total=  25  [Boeing 777-300ER:12  Boeing 787-9:8  Airbus A380:5]
+    DXB-JFK          Month  3  | total=  23  [Airbus A380:7  Boeing 777-300ER:9  Boeing 787-9:7]
+    DXB-JFK          Month  4  | total=  13  [Boeing 787-9:10  Boeing 777-300ER:3]
+    DXB-JFK          Month  5  | total=  12  [Airbus A380:3  Boeing 777-300ER:9]
+    DXB-JFK          Month  6  | total=  25  [Airbus A380:3  Boeing 777-300ER:11  Boeing 787-9:11]
+    DXB-JFK          Month  7  | total=  26  [Boeing 787-9:10  Airbus A380:10  Boeing 777-300ER:6]
+    DXB-JFK          Month  8  | total=   9  [Boeing 777-300ER:9]
+    DXB-JFK          Month  9  | total=  17  [Airbus A380:3  Boeing 777-300ER:5  Boeing 787-9:9]
+    DXB-JFK          Month 10  | total=  21  [Boeing 777-300ER:7  Boeing 787-9:10  Airbus A380:4]
+    DXB-JFK          Month 11  | total=  24  [Airbus A380:9  Boeing 777-300ER:9  Boeing 787-9:6]
+    DXB-JFK          Month 12  | total=   8  [Boeing 777-300ER:8]
+    DXB-KHI          Month  1  | total=  16  [Airbus A320:10  Boeing 737-800:6]
+    DXB-KHI          Month  2  | total=  20  [Airbus A320:13  Boeing 737-800:7]
+    DXB-KHI          Month  3  | total=  16  [Airbus A320:10  Boeing 737-800:6]
+    DXB-KHI          Month  4  | total=  16  [Airbus A320:9  Boeing 737-800:7]
+    DXB-KHI          Month  5  | total=  17  [Airbus A320:9  Boeing 737-800:8]
+    DXB-KHI          Month  6  | total=  18  [Airbus A320:7  Boeing 737-800:11]
+    DXB-KHI          Month  7  | total=  20  [Airbus A320:12  Boeing 737-800:8]
+    DXB-KHI          Month  8  | total=  20  [Airbus A320:13  Boeing 737-800:7]
+    DXB-KHI          Month  9  | total=  15  [Airbus A320:7  Boeing 737-800:8]
+    DXB-KHI          Month 10  | total=  17  [Airbus A320:10  Boeing 737-800:7]
+    DXB-KHI          Month 11  | total=  17  [Airbus A320:7  Boeing 737-800:10]
+    DXB-KHI          Month 12  | total=  15  [Airbus A320:4  Boeing 737-800:11]
+    DXB-KUL          Month  1  | total=  15  [Airbus A350-900:7  Boeing 777-300ER:8]
+    DXB-KUL          Month  2  | total=  19  [Airbus A350-900:8  Boeing 777-300ER:11]
+    DXB-KUL          Month  3  | total=  17  [Boeing 777-300ER:9  Airbus A350-900:8]
+    DXB-KUL          Month  4  | total=  18  [Airbus A350-900:9  Boeing 777-300ER:9]
+    DXB-KUL          Month  5  | total=  20  [Airbus A350-900:12  Boeing 777-300ER:8]
+    DXB-KUL          Month  6  | total=  19  [Airbus A350-900:8  Boeing 777-300ER:11]
+    DXB-KUL          Month  7  | total=  20  [Airbus A350-900:11  Boeing 777-300ER:9]
+    DXB-KUL          Month  8  | total=  19  [Airbus A350-900:10  Boeing 777-300ER:9]
+    DXB-KUL          Month  9  | total=  15  [Airbus A350-900:4  Boeing 777-300ER:11]
+    DXB-KUL          Month 10  | total=  16  [Airbus A350-900:12  Boeing 777-300ER:4]
+    DXB-KUL          Month 11  | total=  18  [Airbus A350-900:9  Boeing 777-300ER:9]
+    DXB-KUL          Month 12  | total=  20  [Airbus A350-900:7  Boeing 777-300ER:13]
+    DXB-KWI          Month  1  | total=  29  [Airbus A320:12  Boeing 737-800:17]
+    DXB-KWI          Month  2  | total=  28  [Airbus A320:13  Boeing 737-800:15]
+    DXB-KWI          Month 10  | total=  13  [Airbus A320:8  Boeing 737-800:5] [NEW]
+    DXB-KWI          Month 11  | total=   3  [Boeing 737-800:3]
+    DXB-KWI          Month 12  | total=  14  [Airbus A320:9  Boeing 737-800:5]
+    DXB-LAX          Month  1  | total=  12  [Airbus A350-900:12]
+    DXB-LAX          Month  2  | total=  11  [Airbus A350-900:11]
+    DXB-LHE          Month  1  | total=  18  [Airbus A350-900:12  Boeing 787-9:6]
+    DXB-LHE          Month  2  | total=  15  [Boeing 787-9:12  Airbus A350-900:3]
+    DXB-LHE          Month  3  | total=  17  [Boeing 787-9:8  Airbus A350-900:9]
+    DXB-LHE          Month  4  | total=  16  [Airbus A350-900:7  Boeing 787-9:9]
+    DXB-LHE          Month  5  | total=  15  [Boeing 787-9:9  Airbus A350-900:6]
+    DXB-LHE          Month  6  | total=  20  [Boeing 787-9:12  Airbus A350-900:8]
+    DXB-LHE          Month  7  | total=  16  [Boeing 787-9:9  Airbus A350-900:7]
+    DXB-LHE          Month  8  | total=  13  [Airbus A350-900:13]
+    DXB-LHE          Month  9  | total=  15  [Airbus A350-900:8  Boeing 787-9:7]
+    DXB-LHE          Month 10  | total=  17  [Boeing 787-9:7  Airbus A350-900:10]
+    DXB-LHE          Month 11  | total=  20  [Boeing 787-9:14  Airbus A350-900:6]
+    DXB-LHE          Month 12  | total=  15  [Airbus A350-900:7  Boeing 787-9:8]
+    DXB-LHR          Month  1  | total=  12  [Boeing 787-9:12]
+    DXB-MAA          Month  1  | total=  15  [Boeing 787-9:8  Airbus A350-900:7]
+    DXB-MAA          Month  2  | total=   9  [Airbus A350-900:9]
+    DXB-MAA          Month  3  | total=   9  [Airbus A350-900:9]
+    DXB-MAA          Month  4  | total=   5  [Airbus A350-900:5]
+    DXB-MAA          Month 10  | total=  11  [Airbus A350-900:10  Boeing 787-9:1] [NEW]
+    DXB-MAA          Month 11  | total=   4  [Airbus A350-900:4]
+    DXB-MAA          Month 12  | total=  11  [Boeing 787-9:3  Airbus A350-900:8]
+    DXB-MCT          Month  1  | total=  29  [Airbus A320:13  Boeing 737-800:16]
+    DXB-MCT          Month  2  | total=  28  [Airbus A320:15  Boeing 737-800:13]
+    DXB-MCT          Month  3  | total=  26  [Boeing 737-800:17  Airbus A320:9]
+    DXB-MCT          Month  4  | total=  26  [Airbus A320:10  Boeing 737-800:16]
+    DXB-MCT          Month  5  | total=  29  [Airbus A320:12  Boeing 737-800:17]
+    DXB-MCT          Month  6  | total=  11  [Boeing 737-800:11]
+    DXB-MCT          Month  7  | total=   3  [Airbus A320:3]
+    DXB-MCT          Month  8  | total=  14  [Airbus A320:14]
+    DXB-MCT          Month  9  | total=  26  [Airbus A320:11  Boeing 737-800:15]
+    DXB-MCT          Month 10  | total=  27  [Airbus A320:14  Boeing 737-800:13]
+    DXB-MCT          Month 11  | total=  29  [Airbus A320:17  Boeing 737-800:12]
+    DXB-MCT          Month 12  | total=  27  [Airbus A320:15  Boeing 737-800:12]
+    DXB-MEL          Month  1  | total=  16  [Boeing 777-300ER:8  Airbus A350-900:8]
+    DXB-MEL          Month  2  | total=  17  [Boeing 777-300ER:7  Airbus A350-900:10]
+    DXB-MEL          Month  3  | total=   9  [Airbus A350-900:1  Boeing 777-300ER:8]
+    DXB-MEL          Month  4  | total=  11  [Airbus A350-900:11]
+    DXB-MEL          Month  5  | total=   7  [Airbus A350-900:7]
+    DXB-MEL          Month  6  | total=   7  [Airbus A350-900:7]
+    DXB-MEL          Month  9  | total=  16  [Airbus A350-900:8  Boeing 777-300ER:8] [NEW]
+    DXB-MEL          Month 10  | total=   2  [Airbus A350-900:2]
+    DXB-MEL          Month 11  | total=  16  [Airbus A350-900:6  Boeing 777-300ER:10]
+    DXB-MEL          Month 12  | total=   4  [Airbus A350-900:4]
+    DXB-ORD          Month  1  | total=  18  [Boeing 777-300ER:7  Airbus A350-900:11]
+    DXB-ORD          Month  2  | total=  20  [Airbus A350-900:10  Boeing 777-300ER:10]
+    DXB-ORD          Month  3  | total=  12  [Airbus A350-900:12]
+    DXB-ORD          Month  4  | total=   4  [Boeing 777-300ER:4]
+    DXB-ORD          Month  9  | total=   8  [Airbus A350-900:8] [NEW]
+    DXB-ORD          Month 10  | total=  12  [Airbus A350-900:12]
+    DXB-ORD          Month 11  | total=   9  [Airbus A350-900:9]
+    DXB-ORD          Month 12  | total=  14  [Boeing 777-300ER:3  Airbus A350-900:11]
+    DXB-SFO          Month  1  | total=  17  [Boeing 777-300ER:7  Airbus A350-900:10]
+    DXB-SFO          Month  3  | total=   1  [Airbus A350-900:1] [NEW]
+    DXB-SFO          Month  4  | total=   5  [Airbus A350-900:5]
+    DXB-SIN          Month  1  | total=  28  [Airbus A380:7  Boeing 777-300ER:6  Boeing 787-9:15]
+    DXB-SIN          Month  2  | total=  25  [Boeing 787-9:10  Airbus A380:6  Boeing 777-300ER:9]
+    DXB-SIN          Month  3  | total=  28  [Boeing 777-300ER:10  Boeing 787-9:11  Airbus A380:7]
+    DXB-SIN          Month  4  | total=  25  [Airbus A380:12  Boeing 777-300ER:8  Boeing 787-9:5]
+    DXB-SIN          Month  5  | total=  30  [Boeing 777-300ER:7  Boeing 787-9:11  Airbus A380:12]
+    DXB-SIN          Month  6  | total=  28  [Airbus A380:7  Boeing 777-300ER:13  Boeing 787-9:8]
+    DXB-SIN          Month  7  | total=  25  [Boeing 787-9:9  Airbus A380:10  Boeing 777-300ER:6]
+    DXB-SIN          Month  8  | total=  19  [Boeing 777-300ER:8  Airbus A380:11]
+    DXB-SIN          Month  9  | total=  26  [Airbus A380:13  Boeing 777-300ER:6  Boeing 787-9:7]
+    DXB-SIN          Month 10  | total=  25  [Boeing 787-9:7  Airbus A380:12  Boeing 777-300ER:6]
+    DXB-SIN          Month 11  | total=  25  [Airbus A380:7  Boeing 777-300ER:10  Boeing 787-9:8]
+    DXB-SIN          Month 12  | total=  26  [Airbus A380:7  Boeing 777-300ER:13  Boeing 787-9:6]
+    DXB-SYD          Month  1  | total=  25  [Airbus A380:3  Boeing 787-9:8  Boeing 777-300ER:14]
+    DXB-SYD          Month  2  | total=  28  [Airbus A380:12  Boeing 777-300ER:11  Boeing 787-9:5]
+    DXB-SYD          Month  3  | total=  11  [Boeing 777-300ER:8  Boeing 787-9:3]
+    DXB-SYD          Month  4  | total=  22  [Boeing 777-300ER:13  Boeing 787-9:4  Airbus A380:5]
+    DXB-SYD          Month  5  | total=  18  [Boeing 777-300ER:7  Boeing 787-9:11]
+    DXB-SYD          Month  6  | total=   2  [Boeing 787-9:2]
+    DXB-SYD          Month  7  | total=   3  [Boeing 777-300ER:2  Boeing 787-9:1]
+    DXB-SYD          Month  9  | total=  22  [Boeing 777-300ER:7  Boeing 787-9:15] [NEW]
+    DXB-SYD          Month 10  | total=  18  [Boeing 777-300ER:11  Boeing 787-9:7]
+    DXB-SYD          Month 11  | total=  17  [Boeing 787-9:6  Boeing 777-300ER:11]
+    DXB-SYD          Month 12  | total=  26  [Boeing 787-9:9  Airbus A380:9  Boeing 777-300ER:8]
+
+  Route openings : 13
+    DXB-BAH  opened Month 9
+    DXB-BLR  opened Month 5
+    DXB-BLR  opened Month 10
+    DXB-CMB  opened Month 9
+    DXB-DOH  opened Month 9
+    DXB-HYD  opened Month 5
+    DXB-HYD  opened Month 9
+    DXB-KWI  opened Month 10
+    DXB-MAA  opened Month 10
+    DXB-MEL  opened Month 9
+    DXB-ORD  opened Month 9
+    DXB-SFO  opened Month 3
+    DXB-SYD  opened Month 9
+
+  Aircraft deployments (u=1):
+    Airbus A320           ->  M1(W=63), M2(W=78), M3(W=43), M4(W=45), M5(W=37), M6(W=7), M7(W=15), M8(W=27), M9(W=40), M10(W=58), M11(W=49), M12(W=50)
+    Airbus A350-900       ->  M1(W=139), M2(W=116), M3(W=102), M4(W=82), M5(W=77), M6(W=63), M7(W=62), M8(W=64), M9(W=88), M10(W=113), M11(W=75), M12(W=103)
+    Airbus A380           ->  M1(W=43), M2(W=49), M3(W=41), M4(W=44), M5(W=43), M6(W=44), M7(W=47), M8(W=40), M9(W=45), M10(W=44), M11(W=52), M12(W=43)
+    Boeing 737-800        ->  M1(W=70), M2(W=56), M3(W=52), M4(W=37), M5(W=56), M6(W=22), M7(W=8), M8(W=7), M9(W=23), M10(W=55), M11(W=55), M12(W=62)
+    Boeing 777-300ER      ->  M1(W=122), M2(W=120), M3(W=103), M4(W=105), M5(W=99), M6(W=97), M7(W=85), M8(W=84), M9(W=86), M10(W=95), M11(W=104), M12(W=108)
+    Boeing 787-9          ->  M1(W=140), M2(W=107), M3(W=79), M4(W=68), M5(W=87), M6(W=84), M7(W=92), M9(W=117), M10(W=101), M11(W=85), M12(W=82)
+
+
+Done. All scenarios completed.
