@@ -28,14 +28,16 @@ NOTE ON LICENSE
   at gurobi.com/academia and set RUN_FULL_DATASET = True.
 """
 
+import gurobipy as gp
 import os
 import sys
+
+os.environ["GRB_LICENSE_FILE"] = r"C:\Users\ed024981\gurobi.lic"
 
 sys.path.insert(0, os.path.dirname(__file__))
 
 from data_loader import load_data, print_data_summary
 from model import build_and_solve
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Optional full-dataset switch
