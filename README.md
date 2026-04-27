@@ -359,7 +359,7 @@ route_category.csv
 4. Run the main experiment script:
 
 ```bash
-python src/main_v2.py
+python src/main.py
 ```
 
 ---
