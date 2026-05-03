@@ -4,29 +4,12 @@ This file summarizes the MDP reformulation of the Profit-Optimal Flight Planning
 
 ---
 
-## 1. Original MILP View
-
-The original model decides how many flights should be operated for each route, period, and aircraft type. The main objective is to maximize total scenario-adjusted expected profit while satisfying operational and financial constraints.
-
-Main MILP decision variables:
-
-- `x_rta`: number of flights on route `r`, period `t`, aircraft type `a`
-- `y_rt`: 1 if route `r` is active in period `t`, 0 otherwise
-- `z_rt`: 1 if route `r` is newly opened in period `t`, 0 otherwise
-- `u_at`: 1 if aircraft type `a` is deployed in period `t`, 0 otherwise
-- `W_at`: total utilization of aircraft type `a` in period `t`
-
-The objective is:
-
-```text
-max adjusted flight profit - route startup costs - aircraft activation costs
-```
 
 The model includes fleet-hour capacity, route activation, minimum service, category coverage, route-opening logic, minimum up-time, aircraft deployment, aircraft utilization, optional financial controls, and maintenance-related capacity reduction.
 
 ---
 
-## 2. MDP Interpretation
+## MDP Interpretation
 
 In the MDP view, each planning period is one decision epoch. At the beginning of each period, the airline observes the current system state, chooses a feasible operating plan, receives immediate reward, and then moves to the next period.
 
@@ -34,7 +17,7 @@ This interpretation is useful because decisions in one period affect future peri
 
 ---
 
-## 3. State Space
+## State Space
 
 A state at period `t` is represented as:
 
@@ -56,7 +39,7 @@ The last two components are optional and are only needed when the financial cont
 
 ---
 
-## 4. Action Space
+## Action Space
 
 At state `s_t`, the action is the current-period operating plan:
 
@@ -90,7 +73,7 @@ This means aircraft are not fully grounded after deployment. Instead, previous d
 
 ---
 
-## 5. Transition Function
+## Transition Function
 
 The transition function is deterministic:
 
@@ -110,7 +93,7 @@ If a route is newly opened, it receives a minimum-up-time commitment. If an airc
 
 ---
 
-## 6. Reward Function
+## Reward Function
 
 The immediate reward is the current-period contribution to the original MILP objective:
 
@@ -127,7 +110,7 @@ Optional loss-risk and NFOC budgets are treated as hard feasibility constraints 
 
 ---
 
-## 7. Policy
+## Policy
 
 A policy is a rule that selects a feasible action for each state:
 
@@ -139,7 +122,7 @@ In this project, a policy tells the airline what operating plan to choose in eac
 
 ---
 
-## 8. Horizon and Terminal Condition
+## Horizon and Terminal Condition
 
 The MDP is finite-horizon because the planning model has a finite set of periods.
 
@@ -153,7 +136,7 @@ This means there is no future reward after the final planning period.
 
 ---
 
-## 9. Bellman Equation
+## Bellman Equation
 
 The deterministic Bellman recursion is:
 
@@ -172,7 +155,7 @@ The Bellman equation shows that the best current decision is the one that balanc
 
 ---
 
-## 10. Type of MDP
+## Type of MDP
 
 The current MDP is:
 
@@ -185,7 +168,7 @@ It is deterministic because the next state is determined by the current state an
 
 ---
 
-## 11. MILP-to-MDP Mapping
+## MILP-to-MDP Mapping
 
 | MILP Element | MDP Interpretation |
 |---|---|
@@ -202,7 +185,7 @@ It is deterministic because the next state is determined by the current state an
 
 ---
 
-## 12. Current Experiments
+## Current Experiments
 
 The current implementation tests the following scenarios:
 
@@ -220,7 +203,7 @@ The current implementation tests the following scenarios:
 
 ---
 
-## 13. Performance Measures
+## Performance Measures
 
 The main output metrics are:
 
@@ -236,7 +219,7 @@ The main output metrics are:
 
 ---
 
-## 14. Notes on Results
+## Notes on Results
 
 The current results are consistent with the model logic. Higher fuel shock reduces objective value. Lower capacity reduces objective value. Higher activation cost reduces objective value. Higher maintenance intensity also reduces objective value, especially in the larger instance.
 
@@ -244,7 +227,7 @@ For medium and large instances, the solution should be described as optimal with
 
 ---
 
-## 15. Summary
+## Summary
 
 The MDP reformulation explains the flight planning problem as a sequential decision process. It clarifies what the airline observes at each period, what decisions it can make, how the system evolves, and how immediate reward connects to future value.
 
