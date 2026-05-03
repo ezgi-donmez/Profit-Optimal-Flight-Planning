@@ -5,10 +5,10 @@ Runner for the improved GA model.
 
 Put this file in your src/ folder together with:
     data_loader.py
-    ga_model_v3_improved.py
+    ga_model_v2.py
 
 Run:
-    python main_ga_v3_improved.py
+    python main_ga.py
 """
 
 import os
