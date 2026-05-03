@@ -1,0 +1,2 @@
+scenario,status,objective_value,fitness,penalty,total_violation,runtime_sec,best_generation,total_flights,active_route_periods,route_openings,sum_q,total_aircraft_hours,eta,population_size,generations_requested,delta,alpha,N_min,maintenance_window,max_active_periods,n_valid_combos,n_x_genes,n_y_genes,n_q_genes
+Experiment 8 - Tight demand cap eta=1.05,FEASIBLE_GA,522512862.1,522512862.1,0.0,0.0,2274.5230720043182,286,4465,255,28,306,27834.8,1.05,160,300,0.0,1.0,2,5,3,840,840,360,72

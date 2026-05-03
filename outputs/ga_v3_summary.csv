@@ -1,0 +1,2 @@
+status,objective_value,fitness,penalty,total_violation,runtime_sec,best_generation,total_flights,active_route_periods,route_openings,sum_q,total_aircraft_hours,population_size,generations_requested,delta,alpha,N_min,maintenance_window,max_active_periods,n_valid_combos,n_x_genes,n_y_genes,n_q_genes
+FEASIBLE_GA,573752765.66,573752765.66,0.0,0.0,1310.6329882144928,92,4745,248,28,314,28542.0,160,300,0.0,1.0,2,5,3,840,840,360,72

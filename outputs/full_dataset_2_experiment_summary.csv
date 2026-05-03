@@ -1,0 +1,3 @@
+experiment_id,experiment_name,description,status,objective_usd,objective_change_vs_baseline_usd,objective_change_vs_baseline_pct,runtime_sec,n_vars,n_constrs,delta,alpha,N_min,maintenance_window,max_active_periods,n_neg_pi_combos,total_flights,active_route_periods,route_openings,sum_q,total_aircraft_hours
+1,Realistic baseline,"Baseline with positive aircraft, recurring route, and startup costs.",OPTIMAL,574833789.73,0.0,0.0,4.9704859256744385,1632,3528,0.0,1.0,2,5,3,242,4715,250,28,308,28742.5
+2,Tight demand cap eta=1.05,Offered seats are limited to 105% of estimated demand.,TIME_LIMIT,529572607.6,-45261182.129999995,-7.873785942760814,2274.2614285945892,1632,3528,0.0,1.0,2,5,3,242,4454,261,27,302,28136.7

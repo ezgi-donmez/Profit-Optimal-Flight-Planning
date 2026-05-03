@@ -1,0 +1,11 @@
+experiment_id,experiment_name,description,status,objective_usd,objective_change_vs_baseline_usd,objective_change_vs_baseline_pct,runtime_sec,n_vars,n_constrs,delta,alpha,N_min,maintenance_window,max_active_periods,n_neg_pi_combos,total_flights,active_route_periods,route_openings,sum_q,total_aircraft_hours
+1,Realistic baseline,"Baseline with positive aircraft, recurring route, and startup costs.",OPTIMAL,574833789.73,0.0,0.0,3.8767712116241455,1632,3528,0.0,1.0,2,5,3,242,4715,250,28,308,28742.5
+2,Fuel shock +10%,Moderate fuel-price shock.,OPTIMAL,553704309.346,-21129480.384000063,-3.675754759288698,1.7303466796875,1632,3528,0.1,1.0,2,5,3,252,4680,245,27,304,28176.5
+3,Fuel shock +25%,Severe fuel-price shock.,OPTIMAL,522408196.9050001,-52425592.82499993,-9.120130681535661,1.4307560920715332,1632,3528,0.25,1.0,2,5,3,271,4594,239,29,298,27509.7
+4,Capacity shortage alpha=0.80,Reduced available aircraft-hour capacity.,OPTIMAL,538415413.45,-36418376.27999997,-6.335461994519445,10.617858409881592,1632,3528,0.0,0.8,2,5,3,242,4058,220,27,312,23299.3
+5,Capacity expansion alpha=1.20,Expanded aircraft-hour capacity.,OPTIMAL,596079526.08,21245736.350000024,3.6959790342142496,0.7965819835662842,1632,3528,0.0,1.2,2,5,3,242,5115,265,28,297,32790.9
+6,High aircraft fixed cost,"Aircraft deployment cost increased to 100,000 per aircraft-period.",OPTIMAL,559554532.6199999,-15279257.110000134,-2.658030439925394,2.346160650253296,1632,3528,0.0,1.0,2,5,3,242,4670,247,28,302,28225.1
+7,High route fixed costs,Recurring route cost and startup cost are increased.,OPTIMAL,558830578.61,-16003211.120000005,-2.783971889946958,2.6191892623901367,1632,3528,0.0,1.0,2,5,3,242,4502,228,27,304,28001.7
+8,Tight demand cap eta=1.05,Offered seats are limited to 105% of estimated demand.,TIME_LIMIT,529572607.6,-45261182.129999995,-7.873785942760814,3600.702316045761,1632,3528,0.0,1.0,2,5,3,242,4454,261,27,302,28136.7
+9,Category coverage K=2,Each route category requires two active routes per period when possible.,OPTIMAL,574833789.73,0.0,0.0,13.888211727142334,1632,3528,0.0,1.0,2,5,3,242,4715,250,28,308,28742.5
+10,Strict maintenance 2-in-5,Rolling maintenance permits only two active deployment periods in each five-period window.,OPTIMAL,503728449.3000001,-71105340.42999995,-12.36972177007865,15.044934749603271,1632,3528,0.0,1.0,2,5,2,242,3678,216,29,214,20033.4
