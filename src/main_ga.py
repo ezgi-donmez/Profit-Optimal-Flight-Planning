@@ -188,7 +188,7 @@ if __name__ == "__main__":
     data = apply_cost_assumptions(data)
     print_data_summary(data)
 
-    res = build_and_solve_ga_improved(data, **GA_SETTINGS)
+    res = build_and_solve_ga(data, **GA_SETTINGS)
 
     summary_row = summarize(res)
 
