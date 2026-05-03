@@ -1,41 +1,5 @@
 """
-ga_model_v3_improved.py
------------------------
-Improved Genetic Algorithm (GA) for the final airline route-frequency /
-fleet-planning model.
-
-This version keeps the SAME data dictionary structure used by data_loader.py and
-model_v2_final.py, but it does NOT import or call Gurobi.
-
-Main function
--------------
-    build_and_solve_ga_improved(data, ...)
-
-Main improvements compared with the repaired GA
------------------------------------------------
-1. Correct q repair: q[a,t] is recalculated as the minimum aircraft deployment
-   required by the assigned aircraft hours, instead of keeping unnecessary
-   random aircraft.
-2. Temporal route repair: route openings are repaired to satisfy minimum
-   up-time and no-late-opening logic.
-3. Category repair: missing category coverage is repaired by activating
-   feasible route blocks.
-4. Greedy fill local search: after feasibility repair, profitable flights are
-   added while route, demand, hub, fleet-hour, and rolling-maintenance limits
-   remain satisfied.
-5. Route-based crossover: children inherit complete route schedules from
-   parents instead of using only flat one-point crossover.
-6. Route-block mutation: route activation is mutated in blocks rather than
-   single random month flips.
-7. Semi-greedy initial population: a part of the population is seeded with
-   high-profit route-period patterns.
-
-Objective and fitness
----------------------
-The original MILP objective is maximized. Constraint violations are penalized:
-    fitness = objective - penalty_weight * total_violation
-
-If total_violation = 0, the penalized fitness equals the raw objective.
+ga_model.py
 """
 
 import time
