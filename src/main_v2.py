@@ -6,10 +6,9 @@ planning MILP.
 
 This file is consistent with:
 - data_loader.py
-- model_v2_final.py
+- model.py
 
-This script runs ONLY FULL-DATASET experiments. It creates 10 meaningful
-experiments and exports compact output CSV files.
+This script runs FULL-DATASET experiments. It creates 10 experiments and exports compact output CSV files.
 """
 
 import os
@@ -19,15 +18,14 @@ from typing import Dict, Any, List, Tuple
 
 import pandas as pd
 
-# Keep this only if your Gurobi license path is exactly this.
-# If Gurobi already works on your computer, this is harmless.
+# Change it to your Gurobi license path.
 os.environ.setdefault("GRB_LICENSE_FILE", r"C:\Users\ed024981\gurobi.lic")
 
 # Make sure imports come from the same src folder as this file.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from data_loader import load_data, print_data_summary
-from model_v2_final import build_and_solve
+from model import build_and_solve
 
 
 # =============================================================================
