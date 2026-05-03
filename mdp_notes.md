@@ -1,234 +1,350 @@
-# MDP Notes - Profit-Optimal Flight Planning
+# Profit-Optimal Flight Planning Using Route Profitability Data
 
-This file summarizes the MDP reformulation of the Profit-Optimal Flight Planning project. The original model is a Mixed-Integer Linear Programming (MILP) model. The MDP version does not replace the MILP; it explains the same multi-period planning problem as a sequential decision-making process.
+This repository contains a strategic airline route-frequency and fleet planning optimization project. The problem is formulated as a **Mixed-Integer Linear Programming (MILP)** model and solved using **Gurobi**. A **Genetic Algorithm (GA)** is also implemented as a heuristic benchmark.
 
----
-
-
-The model includes fleet-hour capacity, route activation, minimum service, category coverage, route-opening logic, minimum up-time, aircraft deployment, aircraft utilization, optional financial controls, and maintenance-related capacity reduction.
+The project was developed for **DS 502 - Introduction to OR Techniques in Data Science** as part of the **MSc Data Science** program at Özyeğin University.
 
 ---
 
-## MDP Interpretation
+## Project Overview
 
-In the MDP view, each planning period is one decision epoch. At the beginning of each period, the airline observes the current system state, chooses a feasible operating plan, receives immediate reward, and then moves to the next period.
+Airlines need to decide which routes to operate, how frequently to serve them, and which aircraft types to assign. These decisions affect profitability, aircraft utilization, service coverage, and operational feasibility.
 
-This interpretation is useful because decisions in one period affect future periods. For example, opening a route creates a minimum-up-time commitment, and deploying an aircraft type may reduce future available capacity through maintenance requirements.
+This project considers an airline operating from **Dubai International Airport (DXB)** to international destinations over a **12-month planning horizon**.
 
----
+The model decides:
 
-## State Space
+- Number of flights for each route, period, and aircraft type
+- Whether each route is active in each period
+- Whether a route is newly opened
+- Number of physical aircraft deployed by aircraft type and period
 
-A state at period `t` is represented as:
-
-```text
-s_t = (t, b_t, m_t, q_t, y_{t-1}, Omega_t_rem, B_t_nfoc_rem)
-```
-
-where:
-
-- `t` is the current planning period.
-- `b_t` is the vector of effective fleet-hour capacities.
-- `m_t` is the vector of remaining minimum-up-time commitments for routes.
-- `q_t` is the aircraft maintenance-memory vector, recording whether each aircraft type was deployed in the previous `N_maint` periods.
-- `y_{t-1}` is the previous period route-activity vector.
-- `Omega_t_rem` is the remaining loss-risk allowance, if the optional loss-risk cap is active.
-- `B_t_nfoc_rem` is the remaining non-fuel operating cost budget, if the optional NFOC budget is active.
-
-The last two components are optional and are only needed when the financial control constraints are active.
+The objective is to **maximize total expected profit** while satisfying operational, demand, capacity, maintenance, compatibility, and service constraints.
 
 ---
 
-## Action Space
+## Dataset
 
-At state `s_t`, the action is the current-period operating plan:
+The project uses the Kaggle dataset:
 
-```text
-a_t = (x_t, y_t, z_t, u_t)
-```
+**Airline Route Profitability and Cost Analysis**  
+Published by **waleedfaheem**
 
-where:
+Dataset link:  
+https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis
 
-- `x_t` gives the flight assignment decisions.
-- `y_t` gives the route activation decisions.
-- `z_t` gives the route-opening decisions.
-- `u_t` gives the aircraft deployment decisions.
+### Instance Summary
 
-A feasible action must satisfy the MILP constraints and the state-dependent rules. In particular:
-
-- Routes with remaining minimum-up-time commitment must stay active.
-- New route openings must be consistent with the previous route activity.
-- New openings are only allowed in feasible opening periods.
-- Aircraft deployment must satisfy available fleet-hour capacity.
-- Recent aircraft deployment reduces available capacity through maintenance.
-- Optional loss-risk and NFOC budgets cannot be exceeded.
-
-The implemented maintenance-capacity rule is:
-
-```text
-sum_r h_rta x_rta + sum_{k=1}^{N_maint} gamma_maint H_at u_{a,t-k} <= H_at
-```
-
-This means aircraft are not fully grounded after deployment. Instead, previous deployment consumes part of future available capacity.
+| Component | Value |
+|---|---:|
+| Hub Airport | DXB |
+| Routes | 30 |
+| Planning Periods | 12 months |
+| Aircraft Types | 6 |
+| Route Categories | Short, Medium, Long Haul |
+| Valid Route-Period-Aircraft Combinations | 840 |
+| Gurobi Decision Variables | 1632 |
+| Gurobi Constraints | 3528 |
 
 ---
 
-## Transition Function
+## Mathematical Model
 
-The transition function is deterministic:
+The problem is modeled as a **Mixed-Integer Linear Programming (MILP)** problem.
 
-```text
-s_{t+1} = F_t(s_t, a_t)
-```
+### Decision Variables
 
-After taking action `a_t`:
-
-- the period advances from `t` to `t+1`,
-- `y_t` becomes the previous route-activity vector for the next state,
-- route commitment counters are updated,
-- aircraft maintenance-memory is updated,
-- remaining optional financial budgets are updated if active.
-
-If a route is newly opened, it receives a minimum-up-time commitment. If an aircraft type is deployed, that deployment is recorded in the maintenance-memory state for future capacity calculations.
-
----
-
-## Reward Function
-
-The immediate reward is the current-period contribution to the original MILP objective:
-
-```text
-r_t(s_t, a_t) =
-sum_{r,a} pi_rta_delta x_rta
-- sum_r SC_r z_rt
-- sum_a FC_a u_at
-```
-
-The first term is the adjusted profit from flights. The second term subtracts route startup costs. The third term subtracts aircraft activation costs.
-
-Optional loss-risk and NFOC budgets are treated as hard feasibility constraints rather than reward penalties.
-
----
-
-## Policy
-
-A policy is a rule that selects a feasible action for each state:
-
-```text
-mu_t(s_t) = a_t in A(s_t)
-```
-
-In this project, a policy tells the airline what operating plan to choose in each period based on current capacity, route commitments, aircraft maintenance-memory, previous route activity, and optional remaining budgets.
-
----
-
-## Horizon and Terminal Condition
-
-The MDP is finite-horizon because the planning model has a finite set of periods.
-
-The terminal condition is:
-
-```text
-V_{|T|+1}(s) = 0
-```
-
-This means there is no future reward after the final planning period.
-
----
-
-## Bellman Equation
-
-The deterministic Bellman recursion is:
-
-```text
-V_t(s_t) = max_{a_t in A(s_t)} { r_t(s_t, a_t) + V_{t+1}(F_t(s_t, a_t)) }
-```
-
-where:
-
-- `V_t(s_t)` is the maximum total remaining profit from period `t` to the end.
-- `A(s_t)` is the feasible action set.
-- `r_t(s_t, a_t)` is the immediate reward.
-- `F_t(s_t, a_t)` is the deterministic transition function.
-
-The Bellman equation shows that the best current decision is the one that balances immediate profit with future value.
-
----
-
-## Type of MDP
-
-The current MDP is:
-
-- finite-horizon,
-- deterministic,
-- fully observable,
-- undiscounted.
-
-It is deterministic because the next state is determined by the current state and action once scenario parameters are fixed. It is fully observable because all relevant information is assumed known at the decision epoch. It is undiscounted because the original MILP objective sums profit and costs over the planning horizon without discounting.
-
----
-
-## MILP-to-MDP Mapping
-
-| MILP Element | MDP Interpretation |
+| Variable | Description |
 |---|---|
-| `x_rta` | Part of the stage action |
-| `y_rt` | Part of the stage action |
-| `z_rt` | Part of the stage action |
-| `u_at` | Part of the stage action |
-| `W_at` | Derived aircraft-utilization quantity |
-| Previous route status | State component |
-| Minimum-up-time logic | Route commitment state and transition |
-| Maintenance-capacity logic | Aircraft maintenance-memory state and transition |
-| Objective function | Stage reward plus future value |
-| MILP constraints | Action feasibility and transition rules |
+| `x[r,t,a]` | Number of flights on route `r`, period `t`, aircraft type `a` |
+| `y[r,t]` | 1 if route `r` is active in period `t`, 0 otherwise |
+| `z[r,t]` | 1 if route `r` is newly opened in period `t`, 0 otherwise |
+| `q[a,t]` | Number of physical aircraft of type `a` deployed in period `t` |
+
+### Objective
+
+The objective maximizes total expected profit by considering:
+
+- Flight-level profit
+- Fuel-price shock effects
+- Route startup costs
+- Recurring route fixed costs
+- Aircraft deployment fixed costs
+
+### Main Constraints
+
+The model includes:
+
+- Route activation and flight-frequency linking
+- Minimum and maximum service requirements
+- Aircraft-hour capacity
+- Fleet availability
+- Rolling-window maintenance approximation
+- Demand-based seat limits
+- Hub slot capacity
+- Route-aircraft compatibility
+- Route category coverage
+- Route opening logic
+- Minimum up-time for newly opened routes
 
 ---
 
-## Current Experiments
+## Solution Approaches
 
-The current implementation tests the following scenarios:
+### 1. Gurobi MILP Solver
 
-- Small baseline: 10 routes, 3 months, 3 aircraft
-- Fuel shock: `delta in {0, 0.10, 0.25}`
-- Capacity: `alpha in {0.30, 0.60, 1.00}`
-- Minimum up-time: `N_min in {1, 2, 3}`
-- Maintenance window: `N_maint in {1, 2, 3}`
-- Maintenance intensity: `gamma_maint in {0.0, 0.10, 0.20, 0.30}`
-- Aircraft activation cost: `FC_a in {0, 50000, 100000}`
-- Medium baseline: 20 routes, 8 months, 4 aircraft
-- Large baseline: 16 routes, 12 months, 6 aircraft
-- Large fuel shock: `delta in {0, 0.10, 0.25}`
-- Large maintenance intensity: `gamma_maint in {0.0, 0.20, 0.40}`
+The MILP model is implemented in Python using `gurobipy`.
 
----
+Gurobi is used as the exact benchmark solver. It provides proven optimal solutions when the model is solved to optimality.
 
-## Performance Measures
+Solver settings:
 
-The main output metrics are:
+| Setting | Value |
+|---|---:|
+| Time Limit | 3600 seconds |
+| MIP Gap | 0.00 |
+| Output | Enabled |
 
-- objective value,
-- total flights,
-- number of active route-periods,
-- number of route openings,
-- aircraft deployment count,
-- aircraft utilization,
-- number of negative-profit combinations,
-- solver runtime,
-- optimality gap if applicable.
+### 2. Genetic Algorithm
 
----
+A Genetic Algorithm is implemented as a heuristic alternative.
 
-## Notes on Results
+The GA includes:
 
-The current results are consistent with the model logic. Higher fuel shock reduces objective value. Lower capacity reduces objective value. Higher activation cost reduces objective value. Higher maintenance intensity also reduces objective value, especially in the larger instance.
+- Model-aware chromosome representation
+- Greedy and random initial population
+- Tournament selection
+- Route-based crossover
+- Route-block mutation
+- Penalty-based fitness function
+- Multi-stage feasibility repair
+- Greedy local search
+- Elitism
 
-For medium and large instances, the solution should be described as optimal within the selected MIP gap tolerance because the implementation uses a 1% MIP gap.
+The GA does not guarantee global optimality, but it can produce feasible and high-quality solutions.
 
 ---
 
-## Summary
+## Repository Structure
 
-The MDP reformulation explains the flight planning problem as a sequential decision process. It clarifies what the airline observes at each period, what decisions it can make, how the system evolves, and how immediate reward connects to future value.
+```text
+Profit-Optimal-Flight-Planning/
+│
+├── src/
+│   ├── clean_aggregate.py      # Cleans and aggregates raw route-profitability data
+│   ├── data_loader.py          # Loads processed data and prepares model inputs
+│   ├── model.py                # Builds and solves the Gurobi MILP model
+│   ├── main.py                 # Main script for running Gurobi experiments
+│   ├── ga_model.py             # Genetic Algorithm implementation
+│   ├── main_ga.py              # Main script for running GA experiments
+│   ├── read_analyze.py         # Reads and analyzes raw dataset
+│   ├── mdp_enumeration.py      # Additional enumeration/analysis script
+│   ├── README.md               # Source-level notes
+│   └── mdp_notes.md            # Notes related to enumeration/MDP-style analysis
+│
+├── data/
+│   ├── raw/                    # Original dataset files
+│   └── processed/              # Cleaned input files
+│
+├── outputs/                    # Gurobi and GA results
+├── requirements.txt
+└── README.md
+```
 
-The MDP view is useful because route openings and aircraft deployments have future consequences. Therefore, a good decision should not only maximize current-period profit but also consider future feasibility and capacity.
+---
+
+## Experiments
+
+Ten computational experiments are conducted.
+
+| ID | Experiment | Description |
+|---|---|---|
+| 1 | Baseline | Standard fixed-cost scenario |
+| 2 | Fuel Shock +10% | Moderate fuel-price increase |
+| 3 | Fuel Shock +25% | Severe fuel-price increase |
+| 4 | Capacity Shortage | Aircraft-hour capacity reduced by 20% |
+| 5 | Capacity Expansion | Aircraft-hour capacity increased by 20% |
+| 6 | High Aircraft Fixed Cost | Aircraft deployment cost doubled |
+| 7 | High Route Fixed Costs | Route fixed costs increased |
+| 8 | Tight Demand Cap | Seat oversupply factor reduced to 1.05 |
+| 9 | Category Coverage K=2 | Minimum category coverage increased |
+| 10 | Strict Maintenance | Rolling-window maintenance tightened |
+
+---
+
+## Gurobi Results
+
+| ID | Experiment | Status | Objective ($M) | Runtime (s) | Flights |
+|---|---|---:|---:|---:|---:|
+| 1 | Baseline | OPTIMAL | 574.83 | 3.88 | 4715 |
+| 2 | Fuel +10% | OPTIMAL | 553.70 | 1.73 | 4680 |
+| 3 | Fuel +25% | OPTIMAL | 522.41 | 1.43 | 4594 |
+| 4 | Capacity Shortage | OPTIMAL | 538.42 | 10.62 | 4058 |
+| 5 | Capacity Expansion | OPTIMAL | 596.08 | 0.80 | 5115 |
+| 6 | High Aircraft Fixed Cost | OPTIMAL | 559.55 | 2.35 | 4670 |
+| 7 | High Route Fixed Costs | OPTIMAL | 558.83 | 2.62 | 4502 |
+| 8 | Tight Demand Cap | TIME LIMIT | 529.57 | 3600.70 | 4454 |
+| 9 | Category Coverage K=2 | OPTIMAL | 574.83 | 13.89 | 4715 |
+| 10 | Strict Maintenance | OPTIMAL | 503.73 | 15.04 | 3678 |
+
+---
+
+## Gurobi vs Genetic Algorithm
+
+### Baseline Comparison
+
+| Metric | Gurobi | GA |
+|---|---:|---:|
+| Status | OPTIMAL | FEASIBLE GA |
+| Objective ($) | 574,833,789.73 | 573,752,765.66 |
+| Difference | 0.00% | 0.188% |
+| Runtime (s) | 3.88 | 1310.63 |
+| Flights | 4715 | 4745 |
+
+The GA produces a feasible solution within **0.188%** of the proven Gurobi optimum. However, Gurobi is much faster for the baseline case.
+
+### Experiment 8 Comparison
+
+| Metric | Gurobi | GA |
+|---|---:|---:|
+| Status | TIME LIMIT | FEASIBLE GA |
+| Objective ($) | 529,572,607.60 | 522,512,862.10 |
+| Difference | — | 1.33% |
+| Runtime (s) | 2274.26 | 2274.52 |
+| Flights | 4454 | 4465 |
+
+For Experiment 8, Gurobi does not prove optimality within the time limit. The GA provides a feasible solution, but its objective is **1.33% lower** than the matched-time Gurobi incumbent.
+
+---
+
+## Key Findings
+
+- The baseline scenario reaches **$574.83 million** objective value.
+- Gurobi solves 9 out of 10 experiments to proven optimality.
+- Fuel-price increases reduce profitability and slightly reduce flight frequency.
+- Capacity shortage decreases both profit and total flights.
+- Capacity expansion improves profit, but with diminishing returns.
+- Tight demand cap is the most computationally difficult case.
+- Category coverage `K = 2` does not change the baseline solution.
+- Strict maintenance has the largest negative impact, reducing profit by **12.37%**.
+- The GA provides high-quality feasible solutions but does not outperform Gurobi in the tested cases.
+
+---
+
+## How to Run
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/ezgi-donmez/Profit-Optimal-Flight-Planning.git
+cd Profit-Optimal-Flight-Planning
+```
+
+### Create Environment
+
+```bash
+conda create -n flight-planning python=3.10
+conda activate flight-planning
+```
+
+### Install Requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+Main packages:
+
+```text
+pandas
+numpy
+gurobipy
+matplotlib
+```
+
+A valid Gurobi license is required to run the MILP model.
+
+### Prepare Data
+
+Run the data cleaning script:
+
+```bash
+python src/clean_aggregate.py
+```
+
+### Run Gurobi Model
+
+```bash
+python src/main.py
+```
+
+### Run Genetic Algorithm
+
+```bash
+python src/main_ga.py
+```
+---
+
+## Output Interpretation
+
+| Metric | Meaning |
+|---|---|
+| Objective Value | Total expected profit |
+| Runtime | Solution time |
+| Flights | Total assigned flights |
+| Active Route-Periods | Number of operated route-months |
+| Route Openings | Number of newly opened routes |
+| Deployed Aircraft-Periods | Total aircraft deployment count |
+
+For Gurobi, `OPTIMAL` means global optimality is proven.  
+`TIME LIMIT` means Gurobi found a feasible solution but did not prove optimality.
+
+For GA, `FEASIBLE GA` means the solution has zero recorded constraint violation according to the implemented feasibility checker.
+
+---
+
+## Limitations
+
+This project is a strategic planning model, not a complete airline scheduling system.
+
+Main limitations:
+
+- Some parameters are estimated due to limited operational data.
+- The model uses monthly planning periods, not daily schedules.
+- Aircraft tail assignment and crew scheduling are not included.
+- Passenger connections and transfer effects are not modeled.
+- Maintenance is represented using an aggregate rolling-window approximation.
+- The GA does not provide an optimality guarantee.
+- Experiments are based on one dataset and a limited number of scenarios.
+
+---
+
+## Future Work
+
+Possible extensions include:
+
+- Stochastic demand modeling
+- Robust optimization under fuel-price uncertainty
+- Daily or weekly flight scheduling
+- Aircraft tail assignment
+- Crew scheduling constraints
+- Passenger connection modeling
+- Larger airline network instances
+- Hybrid Gurobi-GA approaches
+- Dashboard-based scenario visualization
+
+---
+
+## Dataset Reference
+
+waleedfaheem, **Airline Route Profitability and Cost Analysis**, Kaggle Dataset.  
+Available at: https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis
+
+
+## Author
+
+**Ezgi Dönmez**  
+MSc Data Science  
+Özyeğin University  
+DS 502  
+May 2026
