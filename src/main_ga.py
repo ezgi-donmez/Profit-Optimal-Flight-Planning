@@ -1,11 +1,11 @@
 """
-main_ga_v3_improved.py
+main_ga.py
 ----------------------
 Runner for the improved GA model.
 
 Put this file in your src/ folder together with:
     data_loader.py
-    ga_model_v2.py
+    ga_model.py
 
 Run:
     python main_ga.py
@@ -22,7 +22,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from data_loader import load_data, print_data_summary
-from ga_model_v2 import build_and_solve_ga_improved
+from ga_model import build_and_solve_ga
 
 
 # =============================================================================
