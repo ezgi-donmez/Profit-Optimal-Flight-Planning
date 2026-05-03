@@ -115,7 +115,7 @@ def _clone_chrom(chrom: Dict[str, List[int]]) -> Dict[str, List[int]]:
 # Main improved GA solver
 # =============================================================================
 
-def build_and_solve_ga_improved(
+def build_and_solve_ga(
     data: Dict[str, Any],
     delta: float = 0.0,
     alpha: float = 1.0,
@@ -1227,15 +1227,15 @@ def build_and_solve_ga_improved(
 
 # Backward-compatible alias if your runner imports build_and_solve_ga.
 def build_and_solve_ga(*args, **kwargs):
-    return build_and_solve_ga_improved(*args, **kwargs)
+    return build_and_solve_ga(*args, **kwargs)
 
 
 if __name__ == "__main__":
     print(
-        "This file defines build_and_solve_ga_improved(data, ...).\n"
+        "This file defines build_and_solve_ga(data, ...).\n"
         "Example:\n"
         "    from data_loader import load_data\n"
-        "    from ga_model_v3_improved import build_and_solve_ga_improved\n"
+        "    from ga_model_v3_improved import build_and_solve_ga\n"
         "    data = load_data()\n"
-        "    results = build_and_solve_ga_improved(data)\n"
+        "    results = build_and_solve_ga(data)\n"
     )
