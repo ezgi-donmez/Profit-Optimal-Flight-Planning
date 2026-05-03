@@ -137,15 +137,7 @@ def build_and_solve(
     verbose: bool = True,
     compute_iis: bool = False,
 ) -> Dict[str, Any]:
-    """
-    Build and solve the final strategic airline route-frequency MILP.
-
-    Important:
-    gamma_maint is intentionally removed. Maintenance is modeled as:
-        sum_{tau in a rolling window} q[a,tau]
-        <= max_active_periods * FleetSize[a]
-    """
-
+    
     data = _add_backward_compatible_defaults(dict(data))
 
     required = [
@@ -283,14 +275,14 @@ def build_and_solve(
     # Constraints
     # ------------------------------------------------------------------
 
-    # (1) Route activation linking
+    # Route activation linking
     for (r, t, a) in combos:
         m.addConstr(
             x[(r, t, a)] <= int(M[(r, t, a)]) * y[(r, t)],
             name=f"link_x_y[{r},{t},{a}]",
         )
 
-    # (2) Minimum service and (3) route-period max frequency
+    # Minimum service and route-period max frequency
     for r in routes:
         for t in periods:
             relevant = [(r, t, a) for a in aircraft if (r, t, a) in x]
@@ -311,7 +303,7 @@ def build_and_solve(
                 # No feasible aircraft for this route-period, so it cannot be active.
                 m.addConstr(y[(r, t)] == 0, name=f"no_feasible_aircraft[{r},{t}]")
 
-    # (4) Physical fleet-hour capacity using q[a,t]
+    # Physical fleet-hour capacity using q[a,t]
     for a in aircraft:
         for t in periods:
             relevant = [(r, t, a) for r in routes if (r, t, a) in x]
@@ -325,9 +317,9 @@ def build_and_solve(
             else:
                 m.addConstr(q[(a, t)] == 0, name=f"no_aircraft_needed[{a},{t}]")
 
-    # (5) q[a,t] <= FleetSize[a] is enforced by q upper bound.
+    # q[a,t] <= FleetSize[a] is enforced by q upper bound.
 
-    # (6) Rolling-window maintenance using q[a,t].
+    # Rolling-window maintenance using q[a,t].
     # If the horizon is shorter than maintenance_window, this constraint is skipped.
     if maintenance_window is not None and max_active_periods is not None:
         maintenance_window = int(maintenance_window)
@@ -343,7 +335,7 @@ def build_and_solve(
                         name=f"rolling_maint[{a},{T[start_idx]}]",
                     )
 
-    # (7) Demand / seat capacity
+    # Demand / seat capacity
     for r in routes:
         for t in periods:
             relevant = [(r, t, a) for a in aircraft if (r, t, a) in x]
@@ -354,7 +346,7 @@ def build_and_solve(
                     name=f"demand_seat_cap[{r},{t}]",
                 )
 
-    # (8) Hub slot capacity
+    # Hub slot capacity
     for t in periods:
         relevant = [(r, t, a) for (r, tt, a) in combos if tt == t]
         if relevant:
@@ -364,7 +356,7 @@ def build_and_solve(
                 name=f"hub_slot_cap[{t}]",
             )
 
-    # (9) Category coverage
+    # Category coverage
     for c in categories:
         for t in periods:
             routes_in_category = [r for r in R_c.get(c, []) if (r, t) in y]
@@ -379,7 +371,7 @@ def build_and_solve(
                 if int(K.get((c, t), 0)) > 0:
                     raise ValueError(f"Category {c} has K[{c},{t}] > 0 but no routes.")
 
-    # (10) Opening detection
+    # Opening detection
     for r in routes:
         for t in periods:
             i = t_idx[t]
@@ -393,7 +385,7 @@ def build_and_solve(
             m.addConstr(z[(r, t)] <= y[(r, t)], name=f"open_ub_active[{r},{t}]")
             m.addConstr(z[(r, t)] <= 1 - prev_active, name=f"open_ub_prev[{r},{t}]")
 
-    # (11) Minimum up-time after opening
+    # Minimum up-time after opening
     N_min = int(N_min)
     if N_min > 0:
         for r in routes:
@@ -406,7 +398,7 @@ def build_and_solve(
                     name=f"min_up_time[{r},{t}]",
                 )
 
-    # (12) No late openings if the minimum-up-time window cannot fit
+    # No late openings if the minimum-up-time window cannot fit
     if N_min > 1 and n_T >= N_min:
         late_start_idx = n_T - N_min + 1
         for r in routes:
@@ -414,7 +406,7 @@ def build_and_solve(
                 t = T[idx]
                 m.addConstr(z[(r, t)] == 0, name=f"no_late_open[{r},{t}]")
 
-    # (13) Optional loss-risk cap
+    # Optional loss-risk cap
     if Omega is not None:
         negative_profit_combos = [key for key in combos if pi_delta[key] < 0]
         if negative_profit_combos:
@@ -424,7 +416,7 @@ def build_and_solve(
                 name="loss_risk_cap",
             )
 
-    # (14) Optional non-fuel operating cost budget
+    # Optional non-fuel operating cost budget
     if B_nfoc is not None:
         m.addConstr(
             gp.quicksum(float(nfoc.get(key, 0.0)) * x[key] for key in combos)
