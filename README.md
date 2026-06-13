@@ -1,3 +1,9 @@
+## License
+
+This project is licensed under the MIT License for the source code.
+
+The datasets used in this project are provided for academic/course purposes and are not redistributed under this license. If you use this repository, please make sure that you have permission to access and use the original data files.
+
 # Profit-Optimal Flight Planning Using Route Profitability Data
 
 This repository contains a strategic airline route-frequency and fleet planning optimization project. The problem is formulated as a **Mixed-Integer Linear Programming (MILP)** model and solved using **Gurobi**. A **Genetic Algorithm (GA)** is also implemented as a heuristic benchmark.
