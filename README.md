@@ -2,7 +2,10 @@
 
 This project is licensed under the MIT License for the source code.
 
-The datasets used in this project are provided for academic/course purposes and are not redistributed under this license. If you use this repository, please make sure that you have permission to access and use the original data files.
+## Dataset Reference
+
+waleedfaheem, **Airline Route Profitability and Cost Analysis**, Kaggle Dataset.  
+Available at: https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis
 
 # Profit-Optimal Flight Planning Using Route Profitability Data
 
@@ -343,10 +346,7 @@ Possible extensions include:
 
 ---
 
-## Dataset Reference
 
-waleedfaheem, **Airline Route Profitability and Cost Analysis**, Kaggle Dataset.  
-Available at: https://www.kaggle.com/datasets/waleedfaheem/airline-route-profitability-and-cost-analysis
 
 ---
 
